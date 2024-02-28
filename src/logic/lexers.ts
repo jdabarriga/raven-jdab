@@ -168,12 +168,8 @@ public class HelloWorld {
     // I am a comment
     int num = 50/2;
   }
-  /*
-  I am multiple lines >2
-  but also a comment
-  */
-}
-`;
+  /* I am multiple lines >2 
+  but also a comment}*/`;
 
 /*
 const tokenizer = new JavaTokenizer(javaCode);
