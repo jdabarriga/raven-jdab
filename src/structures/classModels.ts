@@ -1,69 +1,45 @@
-// @ts-nocheck
+const ACCESS_MODIFIERS = ["public", "private", "protected"];
 
 export interface VariableModel {
     name: string,
-    value: any,
+    value: string,
     type: string,
-    access: string,
-    static: boolean,
-    final: boolean
+    modifiers: string[],
+    line: number
 }
-
-export const VariableModelDefaults: VariableModel = {
-    name: "", 
-    value: undefined, 
-    type: "", 
-    access: "private", 
-    static: false, 
-    final: false
-}
-
-
 export interface MethodModel {
     name: string,
     parameters: VariableModel[],
     return: string,
-    static: boolean,
-    access: string,
-    final: boolean
+    modifiers: string[],
+    generics: string[],
+    line: number
 }
-
-export const MethodModelDefaults: MethodModel = {
-    name: "", 
-    parameters: [],
-    return: "",
-    access: "private", 
-    static: false, 
-    final: false
-}
-
-
 export interface ClassModel {
     name: string,
     attributes: VariableModel[],
     methods: MethodModel[],
-    abstract: boolean,
     interface: boolean,
-    access: string,
     extends: string,
-    static: boolean,
-    implements: string[]
+    implements: string[],
+    modifiers: string[],
+    generics: string[],
+    filePath: string,
+    line: number
 }
-
-export const ClassModelDefaults: ClassModel = {
-    name: "", 
-    attributes: [],
-    methods: [],
-    abstract: false,
-    interface: false,
-    access: "public",
-    extends: "",
-    static: false,
-    implements: []
-}
-
-
-export interface AttributesAndMethods {
+export interface Members {
     attributes: VariableModel[],
     methods: MethodModel[]
+}
+export function GetModelAccess(dataModel) {
+    return dataModel.modifiers.filter(element => ACCESS_MODIFIERS.includes(element))[0];
+}
+export function GetModelStatic(dataModel) {
+    return dataModel.modifiers.includes("static");
+}
+export function GetModelFinal(dataModel) {
+    return dataModel.modifiers.includes("final");
+}
+export function GetModelAbstract(dataModel) {
+    return dataModel.modifiers.includes("abstract");
 }

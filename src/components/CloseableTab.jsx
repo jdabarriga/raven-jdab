@@ -9,6 +9,7 @@ import './ClassNode.css';
 import dagre from 'dagre';
 import ClassInspector from './ClassInspector';
 import ReactFlow, { Controls, Background, useNodesState, useEdgesState, MarkerType } from 'reactflow';
+import { os, filesystem } from "@neutralinojs/lib";
 
 // Node types
 const nodeTypes = {
@@ -181,7 +182,7 @@ const ClosableTab = ({classData}) => {
                                     color: '#FFFFFF',
                                 },
                                     style: {
-                                    strokeWidth: 2,
+                                    strokeWidth: 5,
                                     stroke: '#FFFFFF',
                                 },
                             };
