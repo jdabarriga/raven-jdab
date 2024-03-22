@@ -9,6 +9,7 @@ import './ClassNode.css';
 import dagre from 'dagre';
 import ClassInspector from './ClassInspector';
 import ReactFlow, { Controls, Background, useNodesState, useEdgesState, MarkerType } from 'reactflow';
+import { os, filesystem } from "@neutralinojs/lib";
 
 // Node types
 const nodeTypes = {
@@ -16,7 +17,7 @@ const nodeTypes = {
 };
 
 // Specifically for the auto layout feature
-const nodeWidth = 172;
+const nodeWidth = 400;
 const nodeHeight = 500;
 
 const dagreGraph = new dagre.graphlib.Graph();
@@ -100,6 +101,17 @@ const ClosableTab = ({classData}) => {
             value: `${openTabsCount + 1}`, // Incrementing count when new tab is created
             label: `${data.name}`
         };
+
+        const getBackgroundColor = () => {
+            if (data.interface) {
+              return 'bg-[#B03A2E]'; // Interface 
+            } else if (data.abstract) {
+              return 'bg-[#7D3C98]'; // Abstract
+            } else {
+              return 'bg-[#148F77]'; // Normal
+            }
+          };
+
         setTabs([...tabs, newTab]);
         setPanels([
             ...panels,
@@ -170,7 +182,7 @@ const ClosableTab = ({classData}) => {
                                     color: '#FFFFFF',
                                 },
                                     style: {
-                                    strokeWidth: 2,
+                                    strokeWidth: 5,
                                     stroke: '#FFFFFF',
                                 },
                             };
@@ -192,20 +204,21 @@ const ClosableTab = ({classData}) => {
     return (
         <div className="">
             <TabContext value={selectedTab}>
-                <TabList onChange={handleChange} aria-label="lab API tabs example" className=" flex rounded-lg bg-gray-800 color-white w-full h-[65px] mb-4">
+                <TabList onChange={handleChange} aria-label="lab API tabs example" className=" flex rounded-lg bg-gray-800 color-white w-[660px] h-[65px] mb-4">
                     <Tab label="Main Tab" value="1" className=" pt-4 bg-black text-white rounded-l-lg mx-1" style={{ width: `150px`, height: '72px', color: 'white'}} />
 
                     {tabs.map((tab) => (
                         <Tab
-                            icon={<CloseIcon onClick={() => handleClose(tab.value)} />}
+                            icon={<CloseIcon className="hover:bg-red-700 rounded-full"onClick={() => handleClose(tab.value)} />}
                             iconPosition="end"
-                            className="bg-white hover:bg-gray-900 mb-4"
+                            className="bg-white hover:bg-gray-900 mb-4 rounded-2xl"
                             style={{ color: 'white' }}
                             key={tab.value} label={tab.label} value={tab.value} />
                     ))}
                 </TabList>
                 <TabPanel value="1" >
-                    <div style={{ width: "610px", height: "440px" }}>
+                    {/* <div style={{ width: "610px", height: "440px", background: 'black' }}> */}
+                    <div className="w-[610px] h-[440px] bg-[#222831] text-white rounded-2xl">
                         <ReactFlow
                             nodes={nodes}
                             edges={edges}
@@ -215,7 +228,7 @@ const ClosableTab = ({classData}) => {
                             nodeTypes={nodeTypes}
                         >
                             <Controls />
-                            <Background variant="dots" gap={12} size={1} />
+                            {/* <Background variant="cross" gap={12} size={1} /> */}
                         </ReactFlow>
                     </div>
                     <button style={{ marginTop: "50px", border: "4px solid white" }} onClick={() => onLayout('TB')}>LAYOUT</button>

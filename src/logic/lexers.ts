@@ -1,10 +1,14 @@
-class Token {
-    constructor(public type: string, public value: string | null) { }
+export class Token {
+    constructor(public type: string, public value: string | null, public line: number) { }
 }
 
+const KEYWORDS = ["abstract", "boolean", "break", "byte", "case", "catch", "char", "class", "continue", "default", "do", "double", "else", "enum", "extends", "final", "finally", "float", "for", "if", "implements", "import", "instanceof", "int", "interface", "long", "new", "package", "private", "protected", "public", "return", "short", "static", "super", "switch", "this", "throw", "throws", "try", "void", "while"];
 export class JavaTokenizer {
+
     private code: string;
     private index: number = 0;
+    private lastToken: Token | null = null;
+    private line: number = 1;
 
     constructor(code: string) {
         this.code = code;
@@ -46,48 +50,64 @@ export class JavaTokenizer {
         return char === '/' && this.code[this.index + 1] === '*';
     }
 
+    private isString(): boolean {
+        return this.lastToken && this.lastToken.type == "QUOTES";
+    }
+
+    private readCurrent() {
+        let result = this.code[this.index];
+        this.index++;
+        return result;
+    }
+
     private readWhile(predicate: (char: string) => boolean): string {
         let result = '';
         while (this.code[this.index] !== undefined && predicate(this.code[this.index])) {
-            result += this.code[this.index];
-            this.index++;
+            if (this.code[this.index] === "\n") {
+                this.line ++;
+            }
+            result += this.readCurrent();
         }
         return result;
     }
 
     private readIdentifier(): Token {
-        if ((this.code[this.index - 1] == '"') || (this.code[this.index - 1] == "'")) {
-            const quote = this.code[this.index - 1];
-            const value = this.readWhile((char) => char !== quote);
-            return new Token('String', value);
-        }
         const value = this.readWhile((char) => this.isIdentifierStart(char) || this.isDigit(char));
-        return new Token('IDENTIFIER', value);
+        const type = KEYWORDS.includes(value) ? 'KEYWORD' : 'IDENTIFIER';
+        this.lastToken = new Token(type, value, this.line);
+        return new Token(type, value, this.line);
     }
 
     private readNumber(): Token {
-        const value = this.readWhile((char) => this.isDigit(char));
-        return new Token('NUMBER', value);
+        const value = this.readWhile((char) => this.isDigit(char) || char === ".");
+        this.lastToken = new Token('NUMBER', value, this.line);
+        return new Token('NUMBER', value, this.line);
     }
 
     private readQuote(): Token {
-        const value = this.readWhile((char) => this.isQuote(char));
-        return new Token('Quotes', value);
+        // Quotes are only 1 character, so don't want to treat multiple quotes next to it as the same token
+        const value = this.readCurrent();
+        let tokenType = this.lastToken.type === "STRING" ? 'ENDQUOTES' : 'QUOTES';
+        this.lastToken = new Token(tokenType, value, this.line);
+        return new Token(tokenType, value, this.line);
     }
 
     private readOperator(): Token {
         const value = this.readWhile((char) => this.isOperator(char));
-        return new Token('OPERATOR', value);
+        this.lastToken = new Token('OPERATOR', value, this.line);
+        return new Token('OPERATOR', value, this.line);
     }
 
     private readCurlyBrace(): Token {
         const value = this.readWhile((char) => this.isCurlyBrace(char));
-        return new Token('Curly Brace', value);
+        this.lastToken = new Token('CURLY_BRACE', value, this.line);
+        return new Token('CURLY_BRACE', value, this.line);
     }
 
     private readSingleLineComment(): Token {
         const value = this.readWhile((char) => char !== '\n' && char !== '\r');
-        return new Token('COMMENT', value);
+        this.lastToken = new Token('COMMENT', value, this.line);
+        return new Token('COMMENT', value, this.line);
     }
 
     private readMultiLineComment(): Token {
@@ -100,13 +120,22 @@ export class JavaTokenizer {
             }
             value += char;
         }
-        return new Token('COMMENT', value);
+        this.lastToken = new Token('COMMENT', value, this.line);
+        return new Token('COMMENT', value, this.line);
     }
 
     private readOther(): Token {
         const value = this.code[this.index];
         this.index++;
-        return new Token('OTHER', value);
+        this.lastToken = new Token('OTHER', value, this.line);
+        return new Token('OTHER', value, this.line);
+    }
+
+    private readString(): Token {
+        const quote = this.lastToken.value;
+        const value = this.readWhile((char) => char !== quote);
+        this.lastToken = new Token('STRING', value, this.line);
+        return new Token('STRING', value, this.line);
     }
 
     private skipWhitespace(): void {
@@ -118,12 +147,20 @@ export class JavaTokenizer {
     }
 
     getNextToken(): Token | null {
-        this.skipWhitespace();
+        
+        if (!this.isString()) {
+            this.skipWhitespace();
+        }
+
         if (this.code[this.index] === undefined) {
             return null; // End of input
         }
 
         const char = this.code[this.index];
+
+        if (this.isString()) {
+            return this.readString();
+        }
 
         if (this.isIdentifierStart(char)) {
             return this.readIdentifier();
@@ -160,7 +197,7 @@ export class JavaTokenizer {
 }
 
 //------ Test example java code
-
+/*
 const javaCode = `
 public class HelloWorld {
   public static void main(String[] args) {
@@ -169,9 +206,8 @@ public class HelloWorld {
     int num = 50/2;
   }
   /* I am multiple lines >2 
-  but also a comment}*/`;
+  but also a comment}`;
 
-/*
 const tokenizer = new JavaTokenizer(javaCode);
 let token = tokenizer.getNextToken();
 while (token !== null) {

@@ -3,6 +3,9 @@
       "outDir": "./dist/",
       "allowJs": true,
       "noEmit": false,
-      "noEmitOnError": false
+      "noEmitOnError": false,
+      "lib": [
+        "ES2021.String"
+      ]
   }
 }
