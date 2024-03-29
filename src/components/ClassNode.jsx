@@ -151,7 +151,7 @@ const ClassNode = memo(({ data, isConnectable }) => {
         </div>
         <div className= "bg-gray-900 rounded-xl flex-grow flex flex-col mt-7">
           <div className= "flex flex-row">
-            <button value={data.classIndex} className="items-center flex border-2 border-white m-2 rounded-xl bg-yellow-700 font-small text-white font-bold w-[40%] p-1"
+            <button value={data.classIndex} className="justify-center items-center flex border-2 border-white m-2 rounded-xl bg-yellow-600 hover:bg-yellow-700 font-small text-white font-bold w-[55%] p-1"
             onClick={data.onClick}>&nbsp;
               {getClasAccess(GetModelAccess(data.classData))}&nbsp;
               {getClasAccess(data.classData)}

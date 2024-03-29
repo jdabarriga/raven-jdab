@@ -9,75 +9,60 @@ const Home = () => {
 
   async function retrieveClassModel() {
     //let stuff = await RetrieveJavaClassModelBySelectingProjectDirectory();
-    const stuff =  [
-      {
-        name: " Shape Class",
-        attributes: [],
-        methods: [],
-        abstract: false,
-        interface: true,
-        access: "private",
-        extends: "",
-        static: false,
-        implements: []
-      },
-      {
-        name: " Box Class",
-        attributes: [],
-        methods: [],
-        abstract: false,
-        interface: false,
-        access: "private",
-        extends: "",
-        static: true,
-        implements: []
-      },
-      {
-        name: "Car",
-        attributes: [
-        {
-          name: "speed",
-          value: undefined,
-          type: "int",
-          access: "private",
-          static: false,
-          final: false
-        },
-        {
-          name: "velocity",
-          value: undefined,
-          type: "float",
-          access: "public",
-          static: false,
-          final: false
-        }
-    ],
-        methods: [
+     const stuff =  [
+    {
+      "name": "NissanGTR",
+      "attributes": [
           {
-            name: "getSpeed", 
-            parameters: [],
-            return: "",
-            access: "private", 
-            static: false, 
-            final: true
+              "name": "speed",
+              "value": "value1",
+              "type": "string",
+              "modifiers": ["public"],
+              "line": 1
           },
           {
-            name: "brake", 
-            parameters: [],
-            return: "",
-            access: "private", 
-            static: true, 
-            final: false
+              "name": "acceleration",
+              "value": "value2",
+              "type": "number",
+              "modifiers": ["private"],
+              "line": 2
           }
-        ],
-        abstract: true,
-        interface: false,
-        access: "public",
-        extends: "",
-        static: true,
-        implements: []
-      }
-    ]
+      ],
+      "methods": [
+          {
+              "name": "turbo",
+              "parameters": [
+                  {
+                      "name": "param1",
+                      "value": "value1",
+                      "type": "string",
+                      "modifiers": ["public"],
+                      "line": 3
+                  }
+              ],
+              "return": "void",
+              "modifiers": ["public"],
+              "generics": [],
+              "line": 3
+          },
+          {
+              "name": "nos_activate",
+              "parameters": [],
+              "return": "string",
+              "modifiers": ["private"],
+              "generics": [],
+              "line": 4
+          }
+      ],
+      "interface": false,
+      "extends": "ParentClass",
+      "implements": ["CarInterface", "VehicleInterface"],
+      "modifiers": ["public", "abstract"],
+      "generics": ["T"],
+      "filePath": "/path/to/file",
+      "line": 5
+  }
+  ]
     setData(stuff);
   }
 
