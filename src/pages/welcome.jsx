@@ -7,13 +7,19 @@ import ravenLogo from '../assets/raven-logo.png'; // Adjust the path to where yo
 const Welcome = () => {
   useEffect(() => {
     // Add any initialization logic or effects here
+    console.log("Welcome component mounted!");
+
+    // Clean-up function
+    return () => {
+      console.log("Welcome component unmounted!");
+      // Add any clean-up logic here// Add any initialization logic or effects here
+    }
   }, []);
 
   return (
     <div className='welcome-container'>
       <div className="text-center">
         <h1 className='welcome-title'>RAVEN</h1>
-        <p className='welcome-title'>TECHNOLOGY</p>
         <p className='welcome-subtitle'>LLC.</p>
         <p className="welcome-description">2024 UNCO Properties</p>
 

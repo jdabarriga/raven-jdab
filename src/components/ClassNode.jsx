@@ -7,7 +7,7 @@ export default memo(({ data, isConnectable }) => {
       <Handle
         type="target"
         position={Position.Top}
-        style={{ background: '#555' }}
+        style={{ background: '#1600dd;' }}
         isConnectable={isConnectable}
       />
       <div className="class-node">
