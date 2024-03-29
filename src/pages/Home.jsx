@@ -1,16 +1,30 @@
 import React, { useState } from 'react';
-import { RetrieveJavaClassModelBySelectingProjectDirectory } from '../logic/folderUtils';
+import { RetrieveJavaClassModels } from '../logic/folderUtils';
 import RavenLogo from '../assets/raven-logo.png';
 import { CloseableTab } from '../components';
 import { Link } from 'react-router-dom';
+import { os, filesystem, events } from "@neutralinojs/lib"
+
+let CurrentWatcherID = -1;
 
 const Home = () => {
   const [data, setData] = useState([]);
 
   async function retrieveClassModel() {
-    let stuff = await RetrieveJavaClassModelBySelectingProjectDirectory();
-    setData(stuff);
+    let projectDir = await os.showFolderDialog('Open a project Directory', {});
+    if (CurrentWatcherID >= 0) await filesystem.removeWatcher(CurrentWatcherID);
+    CurrentWatcherID = await filesystem.createWatcher(projectDir);
+    let classes = await RetrieveJavaClassModels(projectDir);
+    console.log(classes);
+    setData(classes);
   }
+
+  events.on('watchFile', async (evt) => {
+    if(CurrentWatcherID == evt.detail.id) {
+        let classes = await RetrieveJavaClassModels(evt.detail.dir);
+        setData(classes);
+    }
+  });
 
   return (
     <div className="text-white mt-4 text-center" /*makes text white , centers text*/>

@@ -1,40 +1,48 @@
 // @ts-nocheck
 
-import { os, filesystem } from "@neutralinojs/lib"
+import { filesystem } from "@neutralinojs/lib"
 
 import { LocateClasses } from './parser';
 import { JavaTokenizer } from './lexers';
+import { FileModel } from '../structures/filesystemModels'
 
 /**
- * Opens dialog for the user to select a directory for a java project, and then reads in the contents 
- * of each java file within
+ * Reads in the contents of each java file within the specified directory and returns an array of class models
+ * @param {string} projectDir - The directory to look through
+ * 
+ * @returns {Promise<ClassModel[]>} - The classes found in the directory as a list of ClassModels
  */
-export async function RetrieveJavaClassModelBySelectingProjectDirectory(): ClassModel[] {
-  let projectDir: string = await os.showFolderDialog('Open a project Directory', {});
-  let code = await GetRecursiveContentsOfDirectoryByExtension(projectDir, "java");
-  const tokenizer = new JavaTokenizer(code);
-  let tokens: string[] = [];
-  let token = tokenizer.getNextToken();
-  while (token !== null) {
-      tokens.push(token.value);
-      token = tokenizer.getNextToken();
+export async function RetrieveJavaClassModels(projectDir: string): Promise<ClassModel[]> {
+  let files = await GetRecursiveContentsOfDirectoryByExtension(projectDir, "java");
+  let classes: FileModel[] = [];
+  for (const file of files) {
+    const tokenizer = new JavaTokenizer(file.content);
+    let tokens = [];
+    let token = tokenizer.getNextToken();
+    while (token !== null) {
+        tokens.push(token);
+        token = tokenizer.getNextToken();
+    }
+    let fileClasses = LocateClasses(tokens);
+    fileClasses.forEach(cl => {
+      cl.filePath = file.path;
+    });
+    classes.push(...fileClasses);
   }
-  let classes = LocateClasses(tokens);
-
   return classes;
 }
 
 /**
- * Returns the contents of all files within a directory that have the specified extension as a string
+ * Returns all files within a directory that have the specified extension as a string
  * @param {string} dir - The directory to look through
  * @param {string} extension - The extension to look for
  * 
- * @returns {Promise<string>} - A string of the contents of each file concatenated together
+ * @returns {Promise<FileModel[]>} - The files in the directory
  */
-export async function GetRecursiveContentsOfDirectoryByExtension(dir: string, extension: string): Promise<string> {
+export async function GetRecursiveContentsOfDirectoryByExtension(dir: string, extension: string): Promise<FileModel[]> {
   let items: string[][] = await GetItemsInDirectoryRecursive(dir, extension);
-  let fileStr: string = await ReadFilesToString(items[0]);
-  return fileStr;
+  let fileArr = await ReadFiles(items[0]);
+  return fileArr;
 }
 
 /**
@@ -105,18 +113,21 @@ async function GetItemsInDirectoryRecursive (dir: string, extension: string = ""
 }
 
 /**
- * Takes in a list of strings of file paths and returns the contents of all files as a string
+ * Takes in a list of strings of file paths and returns the files as FileModels
  *
  * @param {string[]} files - An array of the file paths
  * 
- * @returns {Promise<string>} - The content of the file as a string
+ * @returns {Promise<FileModel>} - The file
  */
-export async function ReadFilesToString(files: string[]): Promise<string> {
-  let fileStr: string = "";
+export async function ReadFiles(files: string[]): Promise<FileModel> {
+  let ret: FileModel = [];
   for (const file of files) {
-    fileStr += await filesystem.readFile(file, {pos:0, size: 100000}) + "\n";
+    ret.push({
+        path: file, 
+        content: await filesystem.readFile(file, {pos:0, size: 100000})
+      });
   }
-  return fileStr;
+  return ret;
 }
 
 /**

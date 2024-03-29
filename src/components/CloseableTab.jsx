@@ -190,7 +190,7 @@ const ClosableTab = ({classData}) => {
                         }
                     }
                 }
-                setLayoutStuff(true);
+                setLayoutStuff(!layoutStuff);
                 return retval;
             });
         } else {
