@@ -4,14 +4,16 @@ export interface VariableModel {
     name: string,
     value: string,
     type: string,
-    modifiers: string[]
+    modifiers: string[],
+    line: number
 }
 export interface MethodModel {
     name: string,
     parameters: VariableModel[],
     return: string,
     modifiers: string[],
-    generics: string[]
+    generics: string[],
+    line: number
 }
 export interface ClassModel {
     name: string,
@@ -21,11 +23,15 @@ export interface ClassModel {
     extends: string,
     implements: string[],
     modifiers: string[],
-    generics: string[]
+    generics: string[],
+    constructors: MethodModel[]
+    filePath: string,
+    line: number
 }
 export interface Members {
     attributes: VariableModel[],
-    methods: MethodModel[]
+    methods: MethodModel[],
+    constructors: MethodModel[]
 }
 export function GetModelAccess(dataModel) {
     return dataModel.modifiers.filter(element => ACCESS_MODIFIERS.includes(element))[0];

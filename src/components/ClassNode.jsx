@@ -9,8 +9,10 @@ import Tooltip from '@mui/material/Tooltip';
 import PaletteIcon from '@mui/icons-material/Palette';
 import ClassIcon from '@mui/icons-material/Class';
 import PublicOffIcon from '@mui/icons-material/PublicOff';
+import EditIcon from '@mui/icons-material/Edit';
 import { Handle, Position } from 'reactflow';
 import { GetModelAccess, GetModelStatic, GetModelFinal, GetModelAbstract } from '../structures/classModels';
+import { os, filesystem } from "@neutralinojs/lib";
 
 // Function to determine the color class based on attribute type
 function getAttributeType(type) {
@@ -137,6 +139,7 @@ const ClassNode = memo(({ data, isConnectable }) => {
       <Handle
         type="target"
         position={Position.Top}
+        style={{ background: '#1600dd;' }}
         isConnectable={isConnectable}
       />
       <div className="flex flex-col flex-grow relative">
@@ -147,18 +150,25 @@ const ClassNode = memo(({ data, isConnectable }) => {
           </div>
         </div>
         <div className= "bg-gray-900 rounded-xl flex-grow flex flex-col mt-7">
-          <button value={data.classIndex} className="items-center flex border-2 border-white m-2 rounded-xl bg-yellow-700 font-small text-white font-bold w-[40%] p-1"
+          <div className= "flex flex-row">
+            <button value={data.classIndex} className="items-center flex border-2 border-white m-2 rounded-xl bg-yellow-700 font-small text-white font-bold w-[40%] p-1"
             onClick={data.onClick}>&nbsp;
               {getClasAccess(GetModelAccess(data.classData))}&nbsp;
               {getClasAccess(data.classData)}
               {data.classData.name}
           </button>
+          <button className="items-center flex border-2 border-white m-2 rounded-xl bg-gray-700 font-small text-white font-bold p-1" onClick={ () => os.execCommand('code -g "' + data.classData.filePath + '":' + data.classData.line) }>
+            <Tooltip title="Edit">
+              <EditIcon fontSize='small'className='rounded-xl bg-white-500 hover:' />
+            </Tooltip>
+          </button>
+          </div>
           <div className="flex items-center">
             <p className='font-bold text-[16px] mr-2 mt-2 ml-1'>ATTRIBUTES</p>
           </div>
           <div className="ml-2" style={{ textAlign: "left", fontSize: "15px" }}>
             {data.classData.attributes.map((attribute, index) => (
-              <span className={`label inline-block rounded-xl ${getAttributeType(attribute.type)} mr-1 p-[2px] items-center justify-center`} key={index}>  &nbsp;
+              <span onClick={ () => os.execCommand('code -g "' + data.classData.filePath + '":' + attribute.line) } className={`label inline-block rounded-xl ${getAttributeType(attribute.type)} mr-1 p-[2px] items-center justify-center`} key={index}>  &nbsp;
               {getAccessTypeIcon(GetModelAccess(attribute))}
               {getFinalOrStatic(GetModelStatic(attribute), GetModelFinal(attribute))}
               &nbsp;{attribute.name} &nbsp; </span>
@@ -169,7 +179,7 @@ const ClassNode = memo(({ data, isConnectable }) => {
           </div>
           <div className="ml-2" style={{ textAlign: "left", fontSize: "15px" }}>
             {data.classData.methods.map((method, index) => (
-              <span className={`label inline-block rounded-xl ${getAttributeType(method.type)} mr-1 p-[2px] items-center justify-center`} key={index}>  &nbsp;
+              <span onClick={ () => os.execCommand('code -g "' + data.classData.filePath + '":' + method.line) } className={`label inline-block rounded-xl ${getAttributeType(method.type)} mr-1 p-[2px] items-center justify-center`} key={index}>  &nbsp;
               {getAccessTypeIcon(GetModelAccess(method))}
               {getFinalOrStatic(GetModelStatic(method), GetModelFinal(method))}
               &nbsp;{method.name} &nbsp; </span>
