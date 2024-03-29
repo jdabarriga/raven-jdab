@@ -15,7 +15,7 @@
 
 import { Route, Routes } from 'react-router-dom';
 //import { Welcome, Home } from '../src/pages';
-import Welcome from './pages/Welcome1'; // Adjust the path as needed
+import Welcome from './pages/Welcome'; // Adjust the path as needed
 import Home from '../src/pages/Home'; // Assuming Home component is also in the pages directory
 
 const App = () => {// Run only once when the component mounts

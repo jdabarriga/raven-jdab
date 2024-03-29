@@ -1,4 +1,4 @@
-import Welcome from "./Welcome1"
+import Welcome from "./Welcome"
 import Home from "./Home"
 
 
