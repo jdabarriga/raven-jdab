@@ -139,6 +139,7 @@ const ClassNode = memo(({ data, isConnectable }) => {
       <Handle
         type="target"
         position={Position.Top}
+        style={{ background: '#1600dd;' }}
         isConnectable={isConnectable}
       />
       <div className="flex flex-col flex-grow relative">

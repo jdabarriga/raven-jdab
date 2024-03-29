@@ -204,7 +204,7 @@ const ClosableTab = ({classData}) => {
     return (
         <div className="">
             <TabContext value={selectedTab}>
-                <TabList onChange={handleChange} aria-label="lab API tabs example" className=" flex rounded-lg bg-gray-800 color-white w-[660px] h-[65px] mb-4">
+                <TabList onChange={handleChange} aria-label="lab API tabs example" className=" flex rounded-lg bg-gray-800 color-white w-[150px] h-[50px] mb-4"> {/* this line will edit the single tab on top size */}
                     <Tab label="Main Tab" value="1" className=" pt-4 bg-black text-white rounded-l-lg mx-1" style={{ width: `150px`, height: '72px', color: 'white'}} />
 
                     {tabs.map((tab) => (
@@ -218,7 +218,7 @@ const ClosableTab = ({classData}) => {
                 </TabList>
                 <TabPanel value="1" >
                     {/* <div style={{ width: "610px", height: "440px", background: 'black' }}> */}
-                    <div className="w-[610px] h-[440px] bg-[#222831] text-white rounded-2xl">
+                    <div className="w-[67vw] h-[80vh] bg-[#222831] text-white rounded-2xl"> {/* this line will edit the gray box with the icons in it */}
                         <ReactFlow
                             nodes={nodes}
                             edges={edges}
@@ -231,7 +231,7 @@ const ClosableTab = ({classData}) => {
                             {/* <Background variant="cross" gap={12} size={1} /> */}
                         </ReactFlow>
                     </div>
-                    <button style={{ marginTop: "50px", border: "4px solid white" }} onClick={() => onLayout('TB')}>LAYOUT</button>
+                    <button style={{ marginTop: "0px", border: "4px solid white" }} onClick={() => onLayout('TB')}>LAYOUT</button>
                 </TabPanel>
                 {panels.map((panel) => (
                     <TabPanel key={panel.value} value={panel.value}>
