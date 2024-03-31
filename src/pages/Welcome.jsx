@@ -12,11 +12,8 @@ const Welcome = () => {
   return (
     <div className='welcome-container'>
       <div className="text-center">
-        <h1 className='welcome-title'>RAVEN</h1>
-        <p className='welcome-title'>TECHNOLOGY</p>
-        <p className='welcome-subtitle'>LLC.</p>
+        <h1 className='welcome-title'>Raven Technology Inc.</h1>
         <p className="welcome-description">2024 UNCO Properties</p>
-
         <button className="welcome-button">
           <Link className="welcome-link" to="/Home">Press Start</Link>
         </button>
