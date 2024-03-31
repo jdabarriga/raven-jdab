@@ -1,19 +1,18 @@
 // @ts-nocheck
 
-import { os, filesystem } from "@neutralinojs/lib"
+import { filesystem } from "@neutralinojs/lib"
 
 import { LocateClasses } from './parser';
 import { JavaTokenizer } from './lexers';
 import { FileModel } from '../structures/filesystemModels'
 
 /**
- * Opens dialog for the user to select a directory for a java project, and then reads in the contents 
- * of each java file within
+ * Reads in the contents of each java file within the specified directory and returns an array of class models
+ * @param {string} projectDir - The directory to look through
  * 
  * @returns {Promise<ClassModel[]>} - The classes found in the directory as a list of ClassModels
  */
-export async function RetrieveJavaClassModelBySelectingProjectDirectory(): Promise<ClassModel[]> {
-  let projectDir: string = await os.showFolderDialog('Open a project Directory', {});
+export async function RetrieveJavaClassModels(projectDir: string): Promise<ClassModel[]> {
   let files = await GetRecursiveContentsOfDirectoryByExtension(projectDir, "java");
   let classes: FileModel[] = [];
   for (const file of files) {

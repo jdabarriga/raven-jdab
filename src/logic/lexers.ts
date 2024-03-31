@@ -1,8 +1,11 @@
+// Define a Token class to represent the different types of tokens
 export class Token {
     constructor(public type: string, public value: string | null, public line: number) { }
 }
 
+// Define a list of keywords in the Java language
 const KEYWORDS = ["abstract", "boolean", "break", "byte", "case", "catch", "char", "class", "continue", "default", "do", "double", "else", "enum", "extends", "final", "finally", "float", "for", "if", "implements", "import", "instanceof", "int", "interface", "long", "new", "package", "private", "protected", "public", "return", "short", "static", "super", "switch", "this", "throw", "throws", "try", "void", "while"];
+// Create a class for tokenizing Java code
 export class JavaTokenizer {
 
     private code: string;
@@ -10,6 +13,7 @@ export class JavaTokenizer {
     private lastToken: Token | null = null;
     private line: number = 1;
 
+    // Constructor to initialize the JavaTokenizer with code
     constructor(code: string) {
         this.code = code;
     }
@@ -60,8 +64,10 @@ export class JavaTokenizer {
         return result;
     }
 
+    // Function to read characters from the current position while a predicate is true
     private readWhile(predicate: (char: string) => boolean): string {
         let result = '';
+        // Continue looping while there are characters remaining in the code, and the predicate is true
         while (this.code[this.index] !== undefined && predicate(this.code[this.index])) {
             if (this.code[this.index] === "\n") {
                 this.line ++;

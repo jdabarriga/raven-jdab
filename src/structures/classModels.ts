@@ -24,12 +24,14 @@ export interface ClassModel {
     implements: string[],
     modifiers: string[],
     generics: string[],
+    constructors: MethodModel[]
     filePath: string,
     line: number
 }
 export interface Members {
     attributes: VariableModel[],
-    methods: MethodModel[]
+    methods: MethodModel[],
+    constructors: MethodModel[]
 }
 export function GetModelAccess(dataModel) {
     return dataModel.modifiers.filter(element => ACCESS_MODIFIERS.includes(element))[0];
