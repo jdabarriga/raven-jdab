@@ -15,7 +15,6 @@ const Home = () => {
     if (CurrentWatcherID >= 0) await filesystem.removeWatcher(CurrentWatcherID);
     CurrentWatcherID = await filesystem.createWatcher(projectDir);
     let classes = await RetrieveJavaClassModels(projectDir);
-    console.log(classes);
     setData(classes);
   }
 

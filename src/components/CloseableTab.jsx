@@ -1,17 +1,13 @@
 import { useState, useEffect, useRef, useImperativeHandle } from "react";
-import { useInstance } from 'reactflow';
 import { Tab } from '@mui/material';
 import { TabList, TabContext, TabPanel } from '@mui/lab';
 import CloseIcon from '@mui/icons-material/Close';
 import React, { useCallback } from 'react';
 import ClassNode from "./ClassNode";
 import 'reactflow/dist/style.css';
-import './ClassNode.css';
 import dagre from 'dagre';
 import ClassInspector from './ClassInspector';
-import ReactFlow, { Controls, Background, useNodesState, useEdgesState, MarkerType, useReactFlow } from 'reactflow';
-import SidebarTab from './SidebarTab';
-import { os, filesystem } from "@neutralinojs/lib";
+import ReactFlow, { Controls, useNodesState, useEdgesState, MarkerType, useReactFlow } from 'reactflow';
 
 // Node types
 const nodeTypes = {

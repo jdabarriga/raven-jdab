@@ -12,7 +12,7 @@ import PublicOffIcon from '@mui/icons-material/PublicOff';
 import EditIcon from '@mui/icons-material/Edit';
 import { Handle, Position } from 'reactflow';
 import { GetModelAccess, GetModelStatic, GetModelFinal, GetModelAbstract } from '../structures/classModels';
-import { os, filesystem } from "@neutralinojs/lib";
+import { os } from "@neutralinojs/lib";
 
 // Function to determine the color class based on attribute type
 function getAttributeType(type) {
