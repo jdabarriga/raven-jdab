@@ -23,7 +23,7 @@ const Home = () => {
           {
               "name": "acceleration",
               "value": "value2",
-              "type": "number",
+              "type": "float",
               "modifiers": ["private"],
               "line": 2
           }

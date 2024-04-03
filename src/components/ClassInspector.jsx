@@ -5,6 +5,17 @@ import PaletteIcon from '@mui/icons-material/Palette';
 import BoltIcon from '@mui/icons-material/Bolt';
 import EditIcon from '@mui/icons-material/Edit';
 import { GetModelAbstract } from "../structures/classModels";
+import { Switch} from "@material-tailwind/react";
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+
+
+// dropdown imports
+import * as React from 'react';
+import Box from '@mui/material/Box';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
 
 
 
@@ -72,6 +83,29 @@ const ClassInspector = ({data}) => {
       const handleCheckboxChange = () => {
         setIsChecked(!isChecked);
       }
+
+
+      //dropdown handle
+      const [type, setType] = React.useState('');
+
+      const handleChange = (event) => {
+        setType(event.target.value);
+      };
+
+      function getAttributeType(type) { // set color attribute type
+        switch (type) {
+          case "int":
+            return "bg-pink-500 p-1";
+          case "string":
+            return "bg-yellow-600 p-1";
+          case "double":
+            return "bg-green-600 p-1";
+          case "float":
+            return "bg-pink-700 p-1";
+          default:
+            return "bg-black p-1"; // Default color for unknown types
+        }
+      }
     return (
     
     <div className={` overflow-y flex  border-4 border-white p-2 rounded ${getClassColor(GetModelAbstract(data), data.interface)} text-white rounded-xl w-[620px] h-[450px]`}>
@@ -95,9 +129,54 @@ const ClassInspector = ({data}) => {
                   <div className="justify-start flex-row font-bold text-m p-2 text-left m-1 ml-10">
                       <div className="flex items-center">
                           <strong>Access</strong> 
-                          <div className="border-2 border-white m-2 rounded-xl bg-green-600 text-white font-bold w-[40%] p-1 text-s text-center ml-10">
-                              {data.modifiers[0]}
+                          {/* <div className="border-2 border-white m-2 rounded-xl bg-green-600 text-white font-bold w-[40%] p-1 text-s text-center ml-10"> */}
+                          <div className="ml-10 rounded-xl text-white">
+                            <div className="height-[50px]">
+                            <Box sx={{ minWidth: 120}}>
+                                <FormControl fullWidth
+                                  sx={{
+                                    backgroundColor: '#38bc79',
+                                    color: 'white',
+                                    borderWidth: '20px',
+                                    fontWeight: "bold",
+                                    '& fieldset': {
+                                      borderColor: 'white !important',
+                                      color: 'white !important',
+                                    },
+                                    '& .MuiInputLabel-root': {
+                                      color: 'white !important', 
+                                      '&:hover': { // Apply styles on hover
+                                        backgroundColor: '#164c30', // Change hover background color here
+                                      },
+                                      },
+                                    '& .MuiSelect-select': { // Select the text inside the Select component
+                                      color: 'white', // Change the font color here
+                                      fontWeight: "bold"
+                                    }
+                                  }}
+                                >
+                                  <InputLabel>Type</InputLabel>
+                                  <Select
+                                    value={type}
+                                    label="Age"
+                                    onChange={handleChange}
+                                    placeholder="Select"
+                                    MenuProps={{
+                                      MenuListProps: {
+                                        style: { backgroundColor: '#2e9360', color: 'white' }, // Change the background color here
+                                      },
+                                    }}
+                                  >
+                                    <MenuItem value={0}>Public</MenuItem>
+                                    <MenuItem value={1}>Private</MenuItem>
+                                  </Select>
+                                </FormControl>
+                              </Box>
+                            </div>
+
                           </div>
+
+                              {/* {data.modifiers[0]} */}
                       </div>
                       <div className="flex items-center">
                           <strong>Interface</strong>
@@ -123,58 +202,23 @@ const ClassInspector = ({data}) => {
                 </div>
                 <div className="bg-gray-800 p-2 mt-2 rounded-xl m-2 p">
                   <strong>Attributes</strong>
-                  <div className="bg-gray-800 justify-center items-center">
-                    <div className="flex flex-row">
+                  <div className="bg-gray-800 items-center">
+                    <div className="flex flex-wrap justify-start">
                       {data.attributes.map((attribute, index) => (
-                        <div key={index} className="p-4 rounded-xl bg-pink-800 rounded m-2 justify-center">
-                          <p>Attribute Name: {attribute.name}</p>
-                          <p>Access: {attribute.modifiers}</p>
-                          <p>Value: {attribute.value}</p>
-                          <p>Type: {attribute.type}</p>
-                          <p>Modifiers: {attribute.modifiers.join(', ')}</p>
-                          <p>Line: {attribute.line}</p>
-                          <div className="bg-pink-900 rounded-xl flex flex-col ">
-                            <p>Modifiers</p>
-                            <div className="flex flex-row justify-center">
-                            <p>Static:</p>
-                            <input
-                            type="checkbox"
-                            id="checkbox"
-                            checked={isChecked}
-                            onChange={handleCheckboxChange}
-                            className="mr-2"
-                            />
-                            <p>Final:</p>
-                            <input
-                            type="checkbox"
-                            id="checkbox"
-                            checked={isChecked}
-                            onChange={handleCheckboxChange}
-                            className="mr-2"
-                            />
-                            </div>
-                            <div className="flex flex-row justify-center">
-                            <p>Transient:</p>
-                            <input
-                            type="checkbox"
-                            id="checkbox"
-                            checked={isChecked}
-                            onChange={handleCheckboxChange}
-                            className="mr-2"
-                            />
-                            <p>Volatile:</p>
-                            <input
-                            type="checkbox"
-                            id="checkbox"
-                            checked={isChecked}
-                            onChange={handleCheckboxChange}
-                            className="mr-2"
-                            />
-                            </div>
-                          </div>
-                          
+                        <div key={index} className={` border-white border-2 font-bold p-4 rounded-xl ${getAttributeType(attribute.type)} rounded m-2`}>
+                          <p className="text-left text-black">Name: <span className="text-white">{attribute.name}</span></p>
+                          <p className="text-left text-black">Access: <span className="text-white">{attribute.modifiers}</span></p>
+                          <p className="text-left text-black">Value: <span className="text-white">{attribute.value}</span></p>
+                          <p className="text-left text-black">Type: <span className="text-white">{attribute.type}</span></p>
+                          <p className="text-left text-black">Modifiers: <span className="text-white">{attribute.modifiers.join(', ')}</span></p>
+                          <p className="text-left text-black">Line: <span className="text-white">{attribute.line}</span></p>
                         </div>
                       ))}
+                      <div className="flex justify-center items-center p-4 rounded-xl m-2">
+                        <button className="text-white bg-gray-900 p-2 rounded-xl height-[120px]">
+                          <AddCircleIcon />
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
