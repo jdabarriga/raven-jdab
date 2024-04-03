@@ -60,11 +60,6 @@ const ClosableTab = ({ classData, focusRef }) => {
     const [panels, setPanels] = useState([]);
     const [openTabsCount, setOpenTabsCount] = useState(1); // Initial count with main tab
 
-    // Handle focus on node from side tab
-    const [focusOnNode, setFocusOnNode] = useState(null);
-
-    const childRef = useRef(null);
-
     useImperativeHandle(focusRef, () => ({
 
         focusOnNode(nodeId) {
@@ -84,7 +79,6 @@ const ClosableTab = ({ classData, focusRef }) => {
     }));
 
     const [reactFlowInstance, setReactFlowInstance] = useState(null);
-    //____
 
     const prevClassDataIdRef = useRef();
     useEffect(() => {
@@ -173,9 +167,7 @@ const ClosableTab = ({ classData, focusRef }) => {
             setNodes((nds) =>
                 classData.map((cl, i) => {
                     let node = {
-                        //New code
                         name: classData[i].name,
-                        //
                         id: (i + 1).toString(),
                         type: 'classNode',
                         position: {
@@ -188,16 +180,6 @@ const ClosableTab = ({ classData, focusRef }) => {
                             classIndex: i,
                         }
                     }
-
-
-                    //NEW CODE
-                    console.log("Node Information: ", nodes);
-                    console.log("node name: " + node.name);
-                    console.log(node.id + " " + node.position.x + " " + node.position.x);
-                    console.log(classData);
-                    console.log(classData[0]);
-                    //___
-
                     return node;
                 })
             );
@@ -254,7 +236,6 @@ const ClosableTab = ({ classData, focusRef }) => {
                     ))}
                 </TabList>
                 <TabPanel value="1" >
-                    {/* <div style={{ width: "610px", height: "440px", background: 'black' }}> */}
                     <div className="w-[67vw] h-[80vh] bg-[#222831] text-white rounded-2xl"> {/* this line will edit the gray box with the icons in it */}
                         <ReactFlow
                             nodes={nodes}
@@ -266,7 +247,6 @@ const ClosableTab = ({ classData, focusRef }) => {
                             onInit={setReactFlowInstance}
                         >
                             <Controls />
-                            {/* <Background variant="cross" gap={12} size={1} /> */}
                         </ReactFlow>
                     </div>
                     <button style={{ marginTop: "0px", border: "4px solid white" }} onClick={() => onLayout('TB')}>LAYOUT</button>
