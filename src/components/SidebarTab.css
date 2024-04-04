@@ -1,0 +1,51 @@
+.sidebar-tab {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+
+.title {
+    font-size: 1.1em;
+    margin-bottom: 15px;
+}
+
+.title-red {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    color: white;
+    background-color: red;
+    font-size: 1.1em;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+li {
+    margin: 5px 0;
+}
+
+.class-button {
+
+    display: block;
+    width: 100%;
+    background-color: linear-gradient(to bottom, #181e29, #465970);
+    color: white;
+    border: 1px solid white;
+    padding: 8px;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 0.5rem;
+}
+
+.class-button:hover {
+    background-color: #0056b3;
+}

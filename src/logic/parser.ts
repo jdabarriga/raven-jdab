@@ -25,7 +25,6 @@ function SkipAnnotation(tokens, index) {
     } else {
         if (index < tokens.length) index ++;
         if (tokens[index].value === "(") index += GetTokensInScope(tokens, index).length + 2;
-        console.log(tokens[index]);
     }
     return index;
 }
@@ -105,7 +104,7 @@ export function LocateClasses(tokens: Token[]): ClassModel[] {
         }
         // If we run into a class modifier, or the class or interface keywords, this is a class definition, and we should start gathering the symbols
         else if (IsClassModifier(tokens[index]) || IsClassKeyword(tokens[index])) {
-            let model: ClassModel = {modifiers: [], generics: [], interface: false, name: "", extends: "", implements: [], attributes: [], methods: [], filePath: "", line: tokens[index].line};
+            let model: ClassModel = {modifiers: [], generics: [], interface: false, name: "", extends: "", implements: [], attributes: [], methods: [], constructors: [], filePath: "", line: tokens[index].line};
             // Gather modifiers
             while (index < tokens.length && IsClassModifier(tokens[index])) {
                 model.modifiers.push(tokens[index].value);
@@ -153,16 +152,17 @@ export function LocateClasses(tokens: Token[]): ClassModel[] {
             }
             // If there are no syntax errors, there should be an opening curly brace here
             if (tokens[index].value !== "{") {
-                console.warn ("A syntax error was found in the code. Check that your class definitions are correct");
+                console.warn ("A syntax error was found in the code. Found a \"" + tokens[index].value  + "\" instead of a \"{\" after the class definition.");
                 return [];
             }
             // Gather all tokens within the curly braces
             let tokensInClass = GetTokensInScope(tokens, index);
             // Gather all of the members
-            let members: Members = LocateMembers(tokensInClass);
+            let members: Members = LocateMembers(tokensInClass, model.name);
             // Insert members into the class model
             model.attributes = [...members.attributes];
             model.methods = [...members.methods];
+            model.constructors = [...members.constructors];
             // Create the class model from the tokens gathered
             classes.push(model);
             // Update the index to start after the class content to continue parsing through the rest of the code
@@ -179,24 +179,30 @@ export function LocateClasses(tokens: Token[]): ClassModel[] {
  * and an array of Method Models (methods) based on the attributes and methods found.
  * 
  * @param {Token[]} tokens - An array of tokens to look through
+ * @param {string} className - The name of the class these methods and attributes belong to
+ * @param {string} isParameters - If this is true, this method is parsing through a list of parameters in a function definition
  * 
  * @returns {Members} - A data structure containing arrays of Variable and Method Models.
  */
-export function LocateMembers(tokens: Token[]): Members {
+export function LocateMembers(tokens: Token[], className: string = "", isParameters = false): Members {
     let ret: Members = {
         attributes: [],
-        methods: []
+        methods: [],
+        constructors: []
     }
     let index = 0;
     while (index < tokens.length) {
+        
         let modifierTokens: Token[] = [];
         let nameToken: Token;
         let typeTokens: Token[] = [];
         let valueTokens: Token[] = [];
         let methodGenericTokens: Token[] = [];
+        let isConstructor = false;
+
         if (tokens[index].value === "@") {
             index = SkipAnnotation(tokens, index);
-        } else if (IsMemberModifier(tokens[index]) || tokens[index].type === "KEYWORD") {
+        } else if (tokens[index].type !== "COMMENT") {
             let line = tokens[index].line;
             while (index < tokens.length && IsMemberModifier(tokens[index])) {
                 modifierTokens.push(tokens[index]);
@@ -211,13 +217,35 @@ export function LocateMembers(tokens: Token[]): Members {
                 methodGenericTokens.push(tokens[index]);
                 index ++;
             }
-            // If the syntax is correct, the next token should indicate the type
-            if (index < tokens.length) {
-                typeTokens.push(tokens[index]);
+            // For arrays
+            if (index < tokens.length && tokens[index].value === "[") {
+                methodGenericTokens.push(tokens[index]);
+                let genericTokens = GetTokensInScope(tokens, index);
+                methodGenericTokens.push(...genericTokens);
+                index += genericTokens.length + 1;
+                methodGenericTokens.push(tokens[index]);
                 index ++;
+            }
+            // The next token should indicate the type, unless this token is the class name in which case this is a constructor
+            if (index < tokens.length) {
+                if (tokens[index].value !== className) {
+                    typeTokens.push(tokens[index]);
+                    index ++;
+                } else {
+                    isConstructor = true;
+                }
             }
             // For generic types
             if (index < tokens.length && tokens[index].value === "<") {
+                typeTokens.push(tokens[index]);
+                let genericTokens = GetTokensInScope(tokens, index);
+                typeTokens.push(...genericTokens);
+                index += genericTokens.length + 1;
+                typeTokens.push(tokens[index]);
+                index ++;
+            }
+            // For arrays
+            if (index < tokens.length && tokens[index].value === "[") {
                 typeTokens.push(tokens[index]);
                 let genericTokens = GetTokensInScope(tokens, index);
                 typeTokens.push(...genericTokens);
@@ -230,46 +258,83 @@ export function LocateMembers(tokens: Token[]): Members {
                 nameToken = tokens[index];
                 index ++;
             }
-            if (index >= tokens.length) {
-                console.warn("A syntax error was found in the code. Check that your member definitions are correct");
-                return {attributes: [], methods: []};
-            }
             // Equal sign here means that this is a defined attribute
-            if (tokens[index].value === "=") {
+            if (index < tokens.length && tokens[index].value === "=") {
                 index ++;
-                // TODO: ACCOUNT FOR DEFINING MULTIPLE ATTRIBUTES AT ONCE
-                while (index < tokens.length && tokens[index].value !== ";") {
-                    valueTokens.push(tokens[index]);
-                    index ++;
+                while (index < tokens.length && !(tokens[index].value === ";" || tokens[index].value === ",")) {
+                    if (tokens[index].value === "(") {
+                        let tokensInScope = GetTokensInScope(tokens, index);
+                        index += tokensInScope.length + 2;
+                    } else if (tokens[index].value === "new") {
+                        index ++;
+                    } else {
+                        valueTokens.push(tokens[index]);
+                        index ++;
+                    }
                 }
             }
             // Opening parinthese here means that this is a method definition
-            else if (tokens[index].value === "(") {
-                // TODO: GET METHOD PARAMETERS (RECURSION?)
+            else if (index < tokens.length && tokens[index].value === "(") {
                 valueTokens = GetTokensInScope(tokens, index);
+                let parameterMembers = LocateMembers(valueTokens, "", true);
                 index += valueTokens.length + 2;
                 let content = GetTokensInScope(tokens, index);
                 index += content.length + 2;
-                ret.methods.push({
-                    modifiers: [...modifierTokens.map((t) => t.value)], 
-                    return: typeTokens.map((t) => t.value).toString().replaceAll(",", ""), 
-                    name: nameToken.value, 
-                    parameters: [],
-                    generics: [],
-                    line: line
-                });
+                if (!isConstructor) {
+                    ret.methods.push({
+                        modifiers: [...modifierTokens.map((t) => t.value)], 
+                        return: typeTokens.map((t) => t.value).toString().replace(/,/g,""),
+                        name: nameToken.value, 
+                        parameters: [...parameterMembers.attributes],
+                        generics: [],
+                        line: line
+                    });
+                } else {
+                    ret.constructors.push({
+                        modifiers: [...modifierTokens.map((t) => t.value)], 
+                        return: typeTokens.map((t) => t.value).toString().replace(/,/g,""), 
+                        name: nameToken.value, 
+                        parameters: [...parameterMembers.attributes],
+                        generics: [],
+                        line: line
+                    });
+                }
             }
-            // Semicolon here means that this is the end of an attribute definition
-            if (index < tokens.length && tokens[index].value === ";") {
+            // Semicolon, comma, or closing parinthese here means that this is the end of a variable definition
+            if ((isParameters && index >= tokens.length) || (index < tokens.length && (tokens[index].value === ";" || tokens[index].value === "," || tokens[index].value === ")"))) {
                 // Add a variable model to the return structure's attributes
                 ret.attributes.push({
                     modifiers: [...modifierTokens.map((t) => t.value)], 
-                    type: typeTokens.map((t) => t.value).toString().replaceAll(",", ""), 
+                    type: typeTokens.map((t) => t.value).toString().replace(/,/g,""), 
                     name: nameToken.value, 
-                    value: valueTokens.map((t) => t.value).toString().replaceAll(",", ""),
+                    value: valueTokens.map((t) => t.value).toString().replace(/,/g,""),
+                    line: line
+                });
+                
+            } 
+            // If there is a comma here, it means that the code is defining multiple attribues on one line
+            while ((index < tokens.length && tokens[index].value === ",") && !isParameters) {
+                // TODO: THIS IS UNSAFE
+                index ++;
+                nameToken.value = tokens[index].value;
+                index ++;
+                valueTokens = [];
+                if (index < tokens.length && tokens[index].value === "=") {
+                    index ++;
+                    while (index < tokens.length && !(tokens[index].value === ";" || tokens[index].value === ",")) {
+                        valueTokens.push(tokens[index]);
+                        index ++;
+                    }
+                }
+                ret.attributes.push({
+                    modifiers: [...modifierTokens.map((t) => t.value)], 
+                    type: typeTokens.map((t) => t.value).toString().replace(/,/g,""), 
+                    name: nameToken.value, 
+                    value: valueTokens.map((t) => t.value).toString().replace(/,/g,""),
                     line: line
                 });
             }
+            index ++;
         } else {
             index ++;
         }
