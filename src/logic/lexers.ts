@@ -201,23 +201,3 @@ export class JavaTokenizer {
         return this.readOther();
     }
 }
-
-//------ Test example java code
-/*
-const javaCode = `
-public class HelloWorld {
-  public static void main(String[] args) {
-    System.out.println("Hello, 5th World!");
-    // I am a comment
-    int num = 50/2;
-  }
-  /* I am multiple lines >2 
-  but also a comment}`;
-
-const tokenizer = new JavaTokenizer(javaCode);
-let token = tokenizer.getNextToken();
-while (token !== null) {
-    console.log(token);
-    token = tokenizer.getNextToken();
-}
-*/

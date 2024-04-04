@@ -1,10 +1,8 @@
-// @ts-nocheck
-
 import { filesystem } from "@neutralinojs/lib"
-
 import { LocateClasses } from './parser';
 import { JavaTokenizer } from './lexers';
 import { FileModel } from '../structures/filesystemModels'
+import { ClassModel } from "../structures/classModels";
 
 /**
  * Reads in the contents of each java file within the specified directory and returns an array of class models
@@ -14,7 +12,7 @@ import { FileModel } from '../structures/filesystemModels'
  */
 export async function RetrieveJavaClassModels(projectDir: string): Promise<ClassModel[]> {
   let files = await GetRecursiveContentsOfDirectoryByExtension(projectDir, "java");
-  let classes: FileModel[] = [];
+  let classes: ClassModel[] = [];
   for (const file of files) {
     const tokenizer = new JavaTokenizer(file.content);
     let tokens = [];
@@ -117,10 +115,10 @@ async function GetItemsInDirectoryRecursive (dir: string, extension: string = ""
  *
  * @param {string[]} files - An array of the file paths
  * 
- * @returns {Promise<FileModel>} - The file
+ * @returns {Promise<FileModel[]>} - The files
  */
-export async function ReadFiles(files: string[]): Promise<FileModel> {
-  let ret: FileModel = [];
+export async function ReadFiles(files: string[]): Promise<FileModel[]> {
+  let ret: FileModel[] = [];
   for (const file of files) {
     ret.push({
         path: file, 

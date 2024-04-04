@@ -141,13 +141,3 @@ var JavaTokenizer = /** @class */ (function () {
     return JavaTokenizer;
 }());
 exports.JavaTokenizer = JavaTokenizer;
-//------ Test example java code
-var javaCode = "\npublic class HelloWorld {\n  public static void main(String[] args) {\n    System.out.println(\"Hello, 5th World!\");\n    // I am a comment\n    int num = 50/2;\n  }\n  /*\n  I am multiple lines >2\n  but also a comment\n  */\n}\n";
-/*
-const tokenizer = new JavaTokenizer(javaCode);
-let token = tokenizer.getNextToken();
-while (token !== null) {
-    console.log(token);
-    token = tokenizer.getNextToken();
-}
-*/ 
