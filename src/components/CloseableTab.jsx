@@ -235,8 +235,10 @@ const ClosableTab = ({ classData, focusRef }) => {
                             key={tab.value} label={tab.label} value={tab.value} />
                     ))}
                 </TabList>
-                <TabPanel value="1" >
-                    <div className="w-[67vw] h-[80vh] bg-[#222831] text-white rounded-2xl"> {/* this line will edit the gray box with the icons in it */}
+            <TabPanel value="1" >
+                <div style={{ position: 'relative' }}>
+                    <button style={{ position: 'absolute', bottom: '20px', right: '20px', border: '4px solid white' }} onClick={() => onLayout('TB')}>LAYOUT</button>
+                    <div className="w-[67vw] h-[80vh] bg-[#222831] text-white rounded-2xl">
                         <ReactFlow
                             nodes={nodes}
                             edges={edges}
@@ -249,7 +251,7 @@ const ClosableTab = ({ classData, focusRef }) => {
                             <Controls />
                         </ReactFlow>
                     </div>
-                    <button style={{ marginTop: "0px", border: "4px solid white" }} onClick={() => onLayout('TB')}>LAYOUT</button>
+                 </div>   
                 </TabPanel>
                 {panels.map((panel) => (
                     <TabPanel key={panel.value} value={panel.value}>

@@ -4,49 +4,54 @@
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  min-width: 100vw;
-  /*background-color: #00000000*/  
-}
-
-body {
+  width: 100%;
   background: linear-gradient(to bottom, #292929, #000000); /* Dark Gray to Black */
 }
 
-.welcome-title {
-  font-size: 9rem;
-  font-weight: bold;
-  text-decoration: underline;
-  font-family: Arial, Helvetica, sans-serif;
-  color: #000000;
-  text-shadow: 
-    -1px -1px 0 #ffffff,  
-    1px -1px 0 #ffffff,
-    -1px 1px 0 #ffffff,
-    1px 1px 0 #ffffff;
+body {
+  margin: 0; /* Reset default body margin */
+  font-family: Arial, Helvetica, sans-serif; /* Default font family */
 }
 
-.welcome-subtitle {
-  margin-top: 0.1rem;
-  font-size: 5rem;
+.welcome-title {
+  font-size: 7vw;
   font-weight: bold;
   text-decoration: underline;
-  font-family: Verdana,Tahoma, sans-serif, sans-serif;
+  color: #141414;
+  text-shadow: 
+    -3px -3px 0 #000,  
+     3px -3px 0 #000,
+    -3px 3px 0 #000,  
+     3px 3px 0 #000,
+    -4px 0 0 #000,
+     4px 0 0 #000,
+     0 -4px 0 #000,
+     0 4px 0 #000; /* Broader outlining effect */
+}
+
+
+
+.welcome-subtitle {
+  margin-top: 0.5rem;
+  font-size: 4vw; /* Responsive font size */
+  font-weight: bold;
+  text-decoration: underline;
+  color: #ffffff;
 }
 
 .welcome-description {
   margin-top: 1rem;
-  font-size: 1rem;
-  font-family: Arial, sans-serif;
-  color: #ffffff;
+  font-size: 2vw; /* Responsive font size */
+  color: #303030;
 }
 
 .welcome-button {
   margin-top: 3rem;
-  font-size: 1.5rem;
-  padding: 1.5rem 4rem;
+  font-size: 2.5vw; /* Responsive font size */
+  padding: 2.5vw 6vw; /* Responsive padding */
   background-color: black;
-  border: 7px solid #271555;
-  border-radius: 70px;
+  border: 0.7vw solid #170c31; /* Responsive border */
+  border-radius: 10vw; /* Responsive border radius */
   outline: none;
 }
 
@@ -60,8 +65,12 @@ body {
 }
 
 .welcome-logo {
-  width: 700px;
-  margin-top: 3rem;
+  width: 60%; /* Responsive width */
+  max-width: 300px; /* Limit maximum width */
+  margin-top: 3vw; /* Responsive margin */
+  margin-bottom: 3vw; /* Added margin for centering */ 
+  margin-left: 5vw;
+  margin-right: 2vw;
   animation: hover 2s ease-in-out infinite;
 }
 
@@ -70,12 +79,9 @@ body {
     transform: translateY(0) rotate(0deg);
   }
   50% {
-    transform: translateY(-10px) rotate(5deg);
+    transform: translateY(-1vw) rotate(5deg); /* Responsive translateY */
   }
   100% {
     transform: translateY(0) rotate(0deg);
   }
 }
-
-
-
