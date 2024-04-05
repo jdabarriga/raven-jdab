@@ -18,6 +18,13 @@ const Home = () => {
     setData(classes);
   }
 
+  events.on('watchFile', async (evt) => {
+    if(CurrentWatcherID == evt.detail.id) {
+        let classes = await RetrieveJavaClassModels(evt.detail.dir);
+        setData(classes);
+    }
+  });
+
   const focusRef = useRef();
 
   return (
