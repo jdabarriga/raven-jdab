@@ -10,7 +10,7 @@ import EditOffIcon from '@mui/icons-material/EditOff';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
 import LockIcon from '@mui/icons-material/Lock';
 import { Switch} from "@material-tailwind/react";
-
+import { os } from "@neutralinojs/lib"
 
 // dropdown imports
 import * as React from 'react';
@@ -248,7 +248,7 @@ const ClassInspector = ({data}) => {
                             <p className="text-left text-black">Type: <span className="text-white">{attribute.type}</span></p>
                             <p className="text-left text-black">Modifiers: <span className="text-white">{attribute.modifiers.join(', ')}</span></p>
                             <p className="text-left text-black">Line: <span className="text-white">{attribute.line}</span></p>
-                            <button className=" border-1 border-white mt-1 text-white bg-gray-800 hover:bg-gray-900 p-2 rounded-xl items-center" onClick={ () => os.execCommand('code -g "' + data.classData.filePath + '":' + data.classData.line) }>
+                            <button className=" border-1 border-white mt-1 text-white bg-gray-800 hover:bg-gray-900 p-2 rounded-xl items-center" onClick={ () => os.execCommand('code -g "' + data.filePath + '":' + attribute.line) }>
                               <div className="flex h-[20px] w-[70px] items-center justify-center !important">
                                 <Tooltip title="Edit in IDE">
                                   <EditIcon style={{ color: 'white' }}/>
@@ -258,7 +258,7 @@ const ClassInspector = ({data}) => {
                           </div>
                       ))}
                       <div className="flex justify-center items-center p-4 rounded-xl m-2 ">
-                        <button className="text-white bg-gray-700 hover:bg-gray-900 p-2 rounded-xl items-center" onClick={ () => os.execCommand('code -g "' + data.classData.filePath + '":' + data.classData.line) }>
+                        <button className="text-white bg-gray-700 hover:bg-gray-900 p-2 rounded-xl items-center" onClick={ () => os.execCommand('code -g "' + data.filePath + '":' + data.line) }>
                           <div className=" flex h-[40px] w-[30px] items-center justify-center">
                               <Tooltip title="Add Attribute">
                                 <AddCircleIcon style={{ color: 'white' }}/>
@@ -301,7 +301,7 @@ const ClassInspector = ({data}) => {
                             </div>
                             <p className="text-left text-black">Modifiers: <span className="text-white">{method.modifiers.join(', ')}</span></p>
                             <p className="text-left text-black">Line: <span className="text-white">{method.line}</span></p>
-                            <button className=" border-1 border-white mt-1 text-white bg-gray-800 hover:bg-gray-900 p-2 rounded-xl items-center" onClick={ () => os.execCommand('code -g "' + data.classData.filePath + '":' + data.classData.line) }>
+                            <button className=" border-1 border-white mt-1 text-white bg-gray-800 hover:bg-gray-900 p-2 rounded-xl items-center" onClick={ () => os.execCommand('code -g "' + data.filePath + '":' + method.line) }>
                               <div className="flex h-[20px] w-[70px] items-center justify-center !important">
                                 <Tooltip title="Edit in IDE">
                                   <EditIcon style={{ color: 'white' }}/>
@@ -311,7 +311,7 @@ const ClassInspector = ({data}) => {
                           </div>
                       ))}
                       <div className="flex justify-center items-center p-4 rounded-xl m-2 ">
-                        <button className="text-white bg-gray-700 hover:bg-gray-900 p-2 rounded-xl items-center" onClick={ () => os.execCommand('code -g "' + data.classData.filePath + '":' + data.classData.line) }>
+                        <button className="text-white bg-gray-700 hover:bg-gray-900 p-2 rounded-xl items-center" onClick={ () => os.execCommand('code -g "' + data.filePath + '":' + data.line) }>
                           <div className=" flex h-[40px] w-[30px] items-center justify-center">
                               <Tooltip title="Add Method">
                                 <AddCircleIcon style={{ color: 'white' }}/>
