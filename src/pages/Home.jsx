@@ -5,16 +5,138 @@ import { CloseableTab, SidebarTab } from '../components';
 import { Link } from 'react-router-dom';
 import { os, filesystem, events } from "@neutralinojs/lib"
 
+// Set this to true to have "Open Project Directory" auto generate example classes instead of opening the file picker
+let developerMode = false;
+
 let CurrentWatcherID = -1;
 
 const Home = () => {
   const [data, setData] = useState([]);
 
   async function retrieveClassModel() {
-    let projectDir = await os.showFolderDialog('Open a project Directory', {});
-    if (CurrentWatcherID >= 0) await filesystem.removeWatcher(CurrentWatcherID);
-    CurrentWatcherID = await filesystem.createWatcher(projectDir);
-    let classes = await RetrieveJavaClassModels(projectDir);
+    let classes = [];
+    if (developerMode) {
+      classes =  [
+        {
+          "name": "NissanGTR",
+          "attributes": [
+              {
+                  "name": "speed",
+                  "value": "value1",
+                  "type": "string",
+                  "modifiers": ["public"],
+                  "line": 1
+              },
+              {
+                  "name": "acceleration",
+                  "value": "value2",
+                  "type": "float",
+                  "modifiers": ["private"],
+                  "line": 2
+              }
+          ],
+          "methods": [
+              {
+                  "name": "turbo",
+                  "parameters": [
+                      {
+                          "name": "param1",
+                          "value": "value1",
+                          "type": "string",
+                          "modifiers": ["public"],
+                          "line": 3
+                      }
+                  ],
+                  "return": "void",
+                  "modifiers": ["public"],
+                  "generics": [],
+                  "line": 3
+              },
+              {
+                  "name": "nos_activate",
+                  "parameters": [],
+                  "return": "string",
+                  "modifiers": ["private"],
+                  "generics": [],
+                  "line": 4
+              }
+          ],
+          "interface": false,
+          "extends": "ParentClass",
+          "implements": ["CarInterface", "VehicleInterface"],
+          "modifiers": ["public", "abstract"],
+          "generics": ["T"],
+          "filePath": "/path/to/file",
+          "line": 5
+      },
+      {
+        name: "ConstructorClass",
+        attributes: [
+          {
+            name: "x",
+            value: "",
+            type: "double",
+            modifiers: [],
+            line: 3
+          }
+        ],
+        methods: [],
+        interface: false,
+        extends: "",
+        implements: [],
+        modifiers: [
+          "public"
+        ],
+        generics: [],
+        constructors: [
+          {
+            name: "ConstructorClass",
+            parameters: [
+              {
+                name: "x",
+                value: "",
+                type: "double",
+                modifiers: [],
+                line: 4
+              }
+            ],
+            return: "",
+            modifiers: [],
+            generics: [],
+            line: 4
+          }
+        ],
+        line: 2,
+        filePath: ""
+      },
+      {
+        name: "Instance",
+        attributes: [
+          {
+            name: "obj",
+            value: "MyObject",
+            type: "MyObject",
+            modifiers: [],
+            line: 4
+          }
+        ],
+        methods: [],
+        interface: false,
+        extends: "NissanGTR",
+        implements: [],
+        modifiers: [],
+        generics: [],
+        constructors: [],
+        line: 2,
+        filePath: ""
+      }
+      ]
+    } else {
+      let projectDir = await os.showFolderDialog('Open a project Directory', {});
+      if (CurrentWatcherID >= 0) await filesystem.removeWatcher(CurrentWatcherID);
+      CurrentWatcherID = await filesystem.createWatcher(projectDir);
+      classes = await RetrieveJavaClassModels(projectDir);
+    }
     setData(classes);
   }
 
