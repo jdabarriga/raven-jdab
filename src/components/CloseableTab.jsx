@@ -221,10 +221,10 @@ const ClosableTab = ({ classData, focusRef }) => {
         [classData, setNodes, createClassInspectorTab]);
 
     return (
-        <div className="">
+        <div className="graph-container"> {/* Added CSS class to center the graph */}
             <TabContext value={selectedTab}>
-                <TabList onChange={handleChange} aria-label="lab API tabs example" className=" flex rounded-lg bg-gray-800 color-white w-[150px] h-[50px] mb-4"> {/* this line will edit the single tab on top size */}
-                    <Tab label="Main Tab" value="1" className=" pt-4 bg-black text-white rounded-l-lg mx-1" style={{ width: `150px`, height: '72px', color: 'white'}} />
+                <TabList onChange={handleChange} aria-label="lab API tabs example" className="flex rounded-lg bg-gray-800 color-white w-[150px] h-[50px] mb-4"> {/* this line will edit the single tab on top size */}
+                    <Tab label="Main Tab" value="1" className="pt-4 bg-black text-white rounded-l-lg mx-1" style={{ width: `150px`, height: '72px', color: 'white'}} />
 
                     {tabs.map((tab) => (
                         <Tab
@@ -237,8 +237,8 @@ const ClosableTab = ({ classData, focusRef }) => {
                 </TabList>
             <TabPanel value="1" >
                 <div style={{ position: 'relative' }}>
-                    <button style={{ position: 'absolute', bottom: '20px', right: '20px', border: '4px solid white' }} onClick={() => onLayout('TB')}>LAYOUT</button>
-                    <div className="w-[67vw] h-[80vh] bg-[#222831] text-white rounded-2xl">
+                    <button style={{ position: 'absolute', bottom: '20px', right: '20px', border: '4px solid white' }} onClick={() => onLayout('TB')}>LAYOUT</button> {/* this line will edit the layout button */}
+                    <div className="w-[67vw] h-[75vh] bg-[#222831] text-white rounded-2xl"> {/* this line will edit the graph (gray box with the icons) size */}
                         <ReactFlow
                             nodes={nodes}
                             edges={edges}

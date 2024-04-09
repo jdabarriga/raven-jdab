@@ -5,11 +5,11 @@ import PaletteIcon from '@mui/icons-material/Palette';
 import BoltIcon from '@mui/icons-material/Bolt';
 import EditIcon from '@mui/icons-material/Edit';
 import { GetModelAbstract, GetModelAccess } from "../structures/classModels";
-import { Switch} from "@material-tailwind/react";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import EditOffIcon from '@mui/icons-material/EditOff';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
 import LockIcon from '@mui/icons-material/Lock';
+import { Switch} from "@material-tailwind/react";
 
 
 // dropdown imports
