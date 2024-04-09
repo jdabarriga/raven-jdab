@@ -62,7 +62,7 @@ const ClosableTab = ({ classData, focusRef }) => {
 
     useImperativeHandle(focusRef, () => ({
 
-        focusOnNode(nodeId) {
+        focusOnNode(nodeId) { // how the nodes are positioned on the graph
             if (reactFlowInstance) {
                 reactFlowInstance.setViewport(
                     {
