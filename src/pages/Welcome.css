@@ -8,6 +8,15 @@
   background: linear-gradient(to bottom, #292929, #000000); /* Dark Gray to Black */
 }
 
+.home-container{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  min-width: 100vw;
+  background: linear-gradient(to bottom, #292929, #000000); /* Dark Gray to Black */
+}
+
 body {
   margin: 0; /* Reset default body margin */
   font-family: Arial, Helvetica, sans-serif; /* Default font family */
@@ -46,11 +55,11 @@ body {
 }
 
 .welcome-button {
-  margin-top: 3rem;
-  font-size: 2.5vw; /* Responsive font size */
-  padding: 2.5vw 6vw; /* Responsive padding */
-  background-color: black;
-  border: 0.7vw solid #170c31; /* Responsive border */
+  margin-top: 2rem;
+  font-size: 2vw; /* text size of the press start button */
+  padding: 1.5vw 3vw; /* padding between the border and text in the press start button */
+  background: linear-gradient(to top, #292929, #000000);
+  border: 0.4vw solid #170c31; /* purple border around the press start button */
   border-radius: 10vw; /* Responsive border radius */
   outline: none;
 }
@@ -66,13 +75,34 @@ body {
 
 .welcome-logo {
   width: 60%; /* Responsive width */
-  max-width: 300px; /* Limit maximum width */
+  max-width: 300px; 
   margin-top: 3vw; /* Responsive margin */
   margin-bottom: 3vw; /* Added margin for centering */ 
   margin-left: 5vw;
   margin-right: 2vw;
   animation: hover 2s ease-in-out infinite;
 }
+
+.raven-logo {
+  width: 65px; /* edit circumference of raven logo on home page */
+  animation: hover 2s ease-in-out infinite;
+}
+
+.directory-button{
+  margin-top: 0.5em;
+  font-size: 0.7; /* text size of the directory button */
+  padding: 0.5vw 1vw; /* padding between the border and text in the directory button */
+  background: linear-gradient(to top, #292929, #000000);
+  border: 0.2vw solid #170c31; /* purple border around the directory button */
+  border-radius: auto; /* Responsive border radius */
+  max-height: 50px;
+  max-width: 275px;
+}
+
+.directory-button:hover {
+  background-color: #0c0a0a;
+}
+
 
 @keyframes hover {
   0% {

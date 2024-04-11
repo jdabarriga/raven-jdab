@@ -8,6 +8,9 @@ import 'reactflow/dist/style.css';
 import dagre from 'dagre';
 import ClassInspector from './ClassInspector';
 import ReactFlow, { Controls, useNodesState, useEdgesState, MarkerType, useReactFlow } from 'reactflow';
+import '../pages/Welcome.css';
+
+
 
 // Node types
 const nodeTypes = {
@@ -61,22 +64,22 @@ const ClosableTab = ({ classData, focusRef }) => {
     const [openTabsCount, setOpenTabsCount] = useState(1); // Initial count with main tab
 
     useImperativeHandle(focusRef, () => ({
-
-        focusOnNode(nodeId) { // how the nodes are positioned on the graph
-            if (reactFlowInstance) {
-                reactFlowInstance.setViewport(
-                    {
-                        x: -nodes[nodeId].position.x + 150,
-                        y: -nodes[nodeId].position.y + 40,
-                        zoom: 1,
-                    },
-                    { duration: 800 }
-                );
+        focusOnGraph() {
+            if (reactFlowInstance && Object.keys(nodes).length > 0) {
+                // Calculate the center point of all nodes
+                const centerX = Object.values(nodes).reduce((acc, node) => acc + node.position.x, 0) / Object.keys(nodes).length;
+                const centerY = Object.values(nodes).reduce((acc, node) => acc + node.position.y, 0) / Object.keys(nodes).length;
+    
+                // Set viewport to center the graph
+                reactFlowInstance.setViewport({
+                    x: -centerX + 150, // Adjust as needed
+                    y: -centerY + 40, // Adjust as needed
+                    zoom: 1, // Maintain default zoom level
+                }, { duration: 800 });
             }
-
         }
-
     }));
+    
 
     const [reactFlowInstance, setReactFlowInstance] = useState(null);
 
@@ -223,9 +226,8 @@ const ClosableTab = ({ classData, focusRef }) => {
     return (
         <div className="graph-container"> {/* Added CSS class to center the graph */}
             <TabContext value={selectedTab}>
-                <TabList onChange={handleChange} aria-label="lab API tabs example" className="flex rounded-lg bg-gray-800 color-white w-[150px] h-[50px] mb-4"> {/* this line will edit the single tab on top size */}
-                    <Tab label="Main Tab" value="1" className="pt-4 bg-black text-white rounded-l-lg mx-1" style={{ width: `150px`, height: '72px', color: 'white'}} />
-
+                <TabList onChange={handleChange} aria-label="lab API tabs example" className="flex rounded-lg bg-gray-800 color-white w-[100px] h-[50px] mt-3 mx-6 "> {/* this line will edit the single tab on top size */}
+                <Tab label="Main Tab" value="1" className="text-center bg-black text-white rounded-l-lg mx-1" style={{ color: 'white'}} />
                     {tabs.map((tab) => (
                         <Tab
                             icon={<CloseIcon className="hover:bg-red-700 rounded-full" onClick={() => handleClose(tab.value)} />}
@@ -237,8 +239,8 @@ const ClosableTab = ({ classData, focusRef }) => {
                 </TabList>
             <TabPanel value="1" >
                 <div style={{ position: 'relative' }}>
-                    <button style={{ position: 'absolute', bottom: '20px', right: '20px', border: '4px solid white' }} onClick={() => onLayout('TB')}>LAYOUT</button> {/* this line will edit the layout button */}
-                    <div className="w-[67vw] h-[75vh] bg-[#222831] text-white rounded-2xl"> {/* this line will edit the graph (gray box with the icons) size */}
+                    <button style={{ position: 'absolute', bottom: '20px', right: '20px', border: '4px solid white' }} onClick={() => onLayout('TB')}>LAYOUT</button> {/* edit the layout button */}
+                    <div className="w-[66vw] h-[70vh] bg-[yellow] text-white rounded-2xl"> {/* edit the graph (gray box with the icons) size */}
                         <ReactFlow
                             nodes={nodes}
                             edges={edges}

@@ -3,7 +3,8 @@ import { RetrieveJavaClassModels } from '../logic/folderUtils';
 import RavenLogo from '../assets/raven-logo.png';
 import { CloseableTab, SidebarTab } from '../components';
 import { Link } from 'react-router-dom';
-import { os, filesystem, events } from "@neutralinojs/lib"
+import { os, filesystem, events } from "@neutralinojs/lib";
+import './Welcome.css';
 
 // Set this to true to have "Open Project Directory" auto generate example classes instead of opening the file picker
 let developerMode = false;
@@ -150,23 +151,22 @@ const Home = () => {
   const focusRef = useRef();
 
   return (
-    <div className="text-white mt-4 text-center" /*makes text white , centers text*/>
-      <div className="bg-[#68666c] flex border-4 rounded-3xl"> {/* This is the sidebar. It takes up 2/8 of the horizontal space, has padding, a dark background, rounded corners, and centers its items. */}
-        <div className="w-2/8 p-2 bg-[#282729] rounded-3xl p-2 m-2 items-center justify-center"> {/* This sets the width of the sidebar and makes sure items inside are centered both vertically and horizontally. */}
-          <div className='w-[20vw] justify-center items-center' /* this is the sidebar width */ > 
-            <header className="flex flex-row mb-4">{/* This is a link that goes back to the homepage of the app. It has some margin to the right. */}
-              <Link to="/" className="mr-5">
-                <img src={RavenLogo} alt="Raven Logo" className='w-[50px]' />
-              </Link>
-              <button className='rounded-3xl' onClick={retrieveClassModel}>Open Project Directory</button>
-            </header>
-            <div className=''>
-              <SidebarTab sidetabs={data} handleFocusClass={focusRef} />
-            </div>
-
+      <div className="text-white mt-0 text-center home-container" /*makes text white , centers text, for open directory button*/>
+        <div className="bg-[#68666c] flex border-4 rounded-3xl"> {/* edits the white border outline of page */}
+          <div className="w-2/8 p-2 bg-[black] rounded-3xl p-1 m-1.5 items-center justify-center"> {/* edits sidebar, p-width, m-gray outline width */}
+            <div className='w-[17vw] justify-center items-center' /* this is the sidebar width */ > 
+              <header className="flex flex-row mb-1">{/* edits vertical spacing between open directory and class names */}
+                <Link to="/" className="mr-5">
+                  <img src={RavenLogo} alt="Raven Logo" className="raven-logo" /> {/* can be edited in welcome.css file */}
+                </Link>
+                <button className="directory-button" onClick={retrieveClassModel}>Open Project Directory</button> {/* can be edited in welcome.css file */}
+              </header>
+              <div className=''>
+                <SidebarTab sidetabs={data} handleFocusClass={focusRef} />
+              </div>
           </div>
         </div>
-        <div className="w-6/8 bg-[#1b1b24] flex p-2 m-2 rounded-3xl border w-[70vw] h-[90vh] text-white">
+        <div className="w-6/8 bg-[black] flex p-0 m-1 rounded-3xl border w-[70vw] h-[85vh] text-white"> {/* edits the outside border of the graph, the gray outline */}
           <div>
             <CloseableTab classData={data} focusRef={focusRef} />
           </div>
