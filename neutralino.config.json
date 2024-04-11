@@ -47,7 +47,8 @@
       "maximize": false,
       "hidden": false,
       "resizable": true,
-      "exitProcessOnClose": false
+      "exitProcessOnClose": false,
+      "icon": "/build/favicon.ico"
     },
     "browser": {
       "globalVariables": {
