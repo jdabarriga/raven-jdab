@@ -1,10 +1,12 @@
 import { useState, useEffect, useRef, useImperativeHandle } from "react";
+import { useInstance } from 'reactflow';
 import { Tab } from '@mui/material';
 import { TabList, TabContext, TabPanel } from '@mui/lab';
 import CloseIcon from '@mui/icons-material/Close';
 import React, { useCallback } from 'react';
 import ClassNode from "./ClassNode";
 import 'reactflow/dist/style.css';
+import './ClassNode.css';
 import dagre from 'dagre';
 import ClassInspector from './ClassInspector';
 import ReactFlow, { Controls, useNodesState, useEdgesState, MarkerType, useReactFlow } from 'reactflow';
@@ -63,25 +65,96 @@ const ClosableTab = ({ classData, focusRef }) => {
     const [panels, setPanels] = useState([]);
     const [openTabsCount, setOpenTabsCount] = useState(1); // Initial count with main tab
 
+    //fix focus
+    const [reactFlowInstance, setReactFlowInstance] = useState(null);
+    const [reactFlowState, setReactFlowState] = useState({
+        width: 0,
+        height: 0,
+        zoom: 1,
+    });
+
+
     useImperativeHandle(focusRef, () => ({
-        focusOnGraph() {
-            if (reactFlowInstance && Object.keys(nodes).length > 0) {
-                // Calculate the center point of all nodes
-                const centerX = Object.values(nodes).reduce((acc, node) => acc + node.position.x, 0) / Object.keys(nodes).length;
-                const centerY = Object.values(nodes).reduce((acc, node) => acc + node.position.y, 0) / Object.keys(nodes).length;
-    
-                // Set viewport to center the graph
-                reactFlowInstance.setViewport({
-                    x: -centerX + 150, // Adjust as needed
-                    y: -centerY + 40, // Adjust as needed
-                    zoom: 1, // Maintain default zoom level
-                }, { duration: 800 });
+
+        focusOnNode(nodeId) {
+            console.log("button clicked")
+            if (reactFlowInstance) {
+                const windowWidth = window.innerWidth;
+                const windowHeight = window.innerHeight;
+                console.log("window width: " + windowWidth);
+                console.log("window height: " + windowHeight);
+
+                let xx, yy;
+                if (windowWidth < 1000) {
+                    xx = -nodes[nodeId].position.x + (windowWidth / 2) - 450;
+                    yy = -nodes[nodeId].position.y + (windowHeight / 2) - 300;
+                } else {
+                    xx = -nodes[nodeId].position.x + (windowWidth / 2) - 475;
+                    yy = -nodes[nodeId].position.y + (windowHeight / 2) - 300;
+                }
+
+
+                reactFlowInstance.setViewport(
+                    {
+                        //x: -nodes[nodeId].position.x + (windowWidth / 2) - 475,
+                        //y: -nodes[nodeId].position.y + (windowHeight / 2) - 300,
+                        x: xx,
+                        y: yy,
+                        zoom: 1.1,
+                    },
+                    { duration: 800 }
+                );
             }
         }
     }));
     
 
-    const [reactFlowInstance, setReactFlowInstance] = useState(null);
+
+
+    /*
+    useImperativeHandle(focusRef, () => ({
+        focusOnNode(nodeId) {
+            console.log("button clicked");
+            if (reactFlowInstance) {
+                const nodeElement = reactFlowInstance.getNode(nodeId);
+                if (nodeElement) {
+                    const { x, y, width, height } = nodeElement.getBoundingClientRect();
+                    const viewportWidth = reactFlowState.width;
+                    const viewportHeight = reactFlowState.height;
+                    console.log("width: " + viewportWidth);
+                    console.log("height: " + viewportHeight);
+
+                    const centerX = viewportWidth / 2;
+                    const centerY = viewportHeight / 2;
+
+                    const newX = x - centerX + width / 2;
+                    const newY = y - centerY + height / 2;
+
+                    reactFlowInstance.setViewport(
+                        {
+                            x: -newX,
+                            y: -newY,
+                            zoom: 1,
+                        },
+                        { duration: 800 }
+                    );
+                }
+            }
+            else {
+                console.log("didn't go");
+            }
+        },
+    }));
+    */
+    // Keep track of viewport size
+    useEffect(() => {
+        if (reactFlowInstance) {
+            const { width, height, zoom } = reactFlowInstance.getViewport();
+            setReactFlowState({ width, height, zoom });
+        }
+    }, [reactFlowInstance]);
+
+    //const [reactFlowInstance, setReactFlowInstance] = useState(null);
 
     const prevClassDataIdRef = useRef();
     useEffect(() => {
@@ -145,6 +218,7 @@ const ClosableTab = ({ classData, focusRef }) => {
         setOpenTabsCount(openTabsCount + 1); // Increment count
         setSelectedTab(`${openTabsCount + 1}`); // Select the newly created tab
     }, [panels, tabs]);
+
 
     // Automatically select main tab if there's only one tab
     useEffect(() => {
@@ -224,7 +298,7 @@ const ClosableTab = ({ classData, focusRef }) => {
         [classData, setNodes, createClassInspectorTab]);
 
     return (
-        <div className="graph-container"> {/* Added CSS class to center the graph */}
+        <div className="">
             <TabContext value={selectedTab}>
                 <div className="flex justify-start items-center">
                     <TabList onChange={handleChange} aria-label="lab API tabs example" className="items-center flex rounded-lg bg-gray-800 color-white h-[50px] mt-3 mx-6  "> {/* this line will edit the single tab on top size */}
@@ -253,9 +327,11 @@ const ClosableTab = ({ classData, focusRef }) => {
                             onInit={setReactFlowInstance}
                         >
                             <Controls />
+                            {/* <Background variant="cross" gap={12} size={1} /> */}
                         </ReactFlow>
                     </div>
-                 </div>   
+                    <button style={{ marginTop: "0px", border: "4px solid white" }} onClick={() => onLayout('TB')}>LAYOUT</button>
+                </div>
                 </TabPanel>
                 {panels.map((panel) => (
                     <TabPanel key={panel.value} value={panel.value}>
