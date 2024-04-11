@@ -125,7 +125,7 @@ const ClassInspector = ({data}) => {
       }
       console.log('model acess type:',getAccessTypeIcon(GetModelAccess(data)))
     return (
-    <div className={` overflow-y flex  border-4 border-white p-2 rounded ${getClassColor(GetModelAbstract(data), data.interface)} text-white rounded-xl w-[620px] h-[450px]`}>
+    <div className={` overflow-y flex  border-4 border-white p-2 rounded ${getClassColor(GetModelAbstract(data), data.interface)} text-white rounded-xl  w-auto h-[70vh]`}>
         <div className= "bg-gray-900 rounded-xl flex-grow flex flex-col mt-7 p-2 overflow-y-auto">
             <div className="flex justify-end">
                 <div className="items-center p-1 bg-black rounded-xl h-9 w-20 ">

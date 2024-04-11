@@ -7,7 +7,7 @@ import { os, filesystem, events } from "@neutralinojs/lib";
 import './Welcome.css';
 
 // Set this to true to have "Open Project Directory" auto generate example classes instead of opening the file picker
-let developerMode = false;
+let developerMode = true;
 
 let CurrentWatcherID = -1;
 
@@ -167,9 +167,9 @@ const Home = () => {
           </div>
         </div>
         <div className="w-6/8 bg-[black] flex p-0 m-1 rounded-3xl border w-[70vw] h-[85vh] text-white"> {/* edits the outside border of the graph, the gray outline */}
-          <div>
-            <CloseableTab classData={data} focusRef={focusRef} />
-          </div>
+            <div className='w-[70vw] h-[60vh]'>
+              <CloseableTab classData={data} focusRef={focusRef} />
+            </div>
         </div>
       </div>
     </div>

@@ -226,21 +226,23 @@ const ClosableTab = ({ classData, focusRef }) => {
     return (
         <div className="graph-container"> {/* Added CSS class to center the graph */}
             <TabContext value={selectedTab}>
-                <TabList onChange={handleChange} aria-label="lab API tabs example" className="flex rounded-lg bg-gray-800 color-white w-[100px] h-[50px] mt-3 mx-6 "> {/* this line will edit the single tab on top size */}
-                <Tab label="Main Tab" value="1" className="text-center bg-black text-white rounded-l-lg mx-1" style={{ color: 'white'}} />
-                    {tabs.map((tab) => (
-                        <Tab
-                            icon={<CloseIcon className="hover:bg-red-700 rounded-full" onClick={() => handleClose(tab.value)} />}
-                            iconPosition="end"
-                            className="bg-white hover:bg-gray-900 mb-4 rounded-2xl"
-                            style={{ color: 'white' }}
-                            key={tab.value} label={tab.label} value={tab.value} />
-                    ))}
-                </TabList>
+                <div className="flex justify-start items-center">
+                    <TabList onChange={handleChange} aria-label="lab API tabs example" className="items-center flex rounded-lg bg-gray-800 color-white h-[50px] mt-3 mx-6  "> {/* this line will edit the single tab on top size */}
+                    <Tab label="Main Tab" value="1" className="flex text-center bg-black text-white rounded-l-lg mx-1" style={{ color: 'white'}} />
+                        {tabs.map((tab) => (
+                            <Tab
+                                icon={<CloseIcon className="hover:bg-red-700 rounded-full" onClick={() => handleClose(tab.value)} />}
+                                iconPosition="end"
+                                className="bg-white hover:bg-gray-900 mb-1 rounded-2xl"
+                                style={{ color: 'white' }}
+                                key={tab.value} label={tab.label} value={tab.value} />
+                        ))}
+                    </TabList>
+                </div>
             <TabPanel value="1" >
                 <div style={{ position: 'relative' }}>
                     <button style={{ position: 'absolute', bottom: '20px', right: '20px', border: '4px solid white' }} onClick={() => onLayout('TB')}>LAYOUT</button> {/* edit the layout button */}
-                    <div className="w-[66vw] h-[70vh] bg-[yellow] text-white rounded-2xl"> {/* edit the graph (gray box with the icons) size */}
+                    <div className="w-[66vw] h-[70vh] bg-gray-800 text-white rounded-2xl"> {/* edit the graph (gray box with the icons) size */}
                         <ReactFlow
                             nodes={nodes}
                             edges={edges}
