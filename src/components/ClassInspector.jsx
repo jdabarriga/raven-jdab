@@ -169,7 +169,9 @@ const ClassInspector = ({data}) => {
                             &nbsp;
                             <div className="flex">
                               {data.implements.map((interfaceName, index) => (
-                                  {interfaceName}
+                                <span>
+                                  {interfaceName}&nbsp;
+                                </span>
                               ))}            
                             </div>
                             
