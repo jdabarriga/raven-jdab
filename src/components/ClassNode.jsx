@@ -9,10 +9,10 @@ import Tooltip from '@mui/material/Tooltip';
 import PaletteIcon from '@mui/icons-material/Palette';
 import ClassIcon from '@mui/icons-material/Class';
 import PublicOffIcon from '@mui/icons-material/PublicOff';
-import EditIcon from '@mui/icons-material/Edit';
 import { Handle, Position } from 'reactflow';
 import { GetModelAccess, GetModelStatic, GetModelFinal, GetModelAbstract } from '../structures/classModels';
 import { os } from "@neutralinojs/lib";
+import InventoryIcon from '@mui/icons-material/Inventory';
 
 // Function to determine the color class based on attribute type
 function getAttributeType(type) {
@@ -26,7 +26,7 @@ function getAttributeType(type) {
     case "float":
       return "bg-pink-700 p-1";
     default:
-      return "bg-black p-1"; // Default color for unknown types
+      return "bg-blue-700 p-1"; // Default color for unknown types
   }
 }
 
@@ -44,40 +44,50 @@ function getAccessTypeIcon(access) {
           <LockIcon fontSize='small'className='rounded-xl bg-red-600 p-1' />
         </Tooltip>
       );
+    case "protected":
+      return (
+        <Tooltip title="Protected">
+          <LockIcon fontSize='small'className='rounded-xl bg-orange-600 p-1' />
+        </Tooltip>
+      );
     default:
-      return null; // No icon for other access types
+      return (
+        <Tooltip title="Default (Package Private)">
+          <InventoryIcon fontSize='small'className='rounded-xl bg-yellow-600 p-1' />
+        </Tooltip>
+      );
   }
 }
 
 function getClassColor(abstract, interFace) {
   if (interFace) {
-    return "bg-gradient-to-b from-[#2922c6] to-[#b279f2]"; // Color for interface
+    return "bg-gradient-to-b from-[#754302] to-[#d4d133]"; // Color for interface
   } else if (abstract) {
-    return "bg-gradient-to-b from-orange-500 to-[#e9a14f]"; // Color for abstract 
+    return "bg-gradient-to-b from-[#940000] to-[#de3333]"; // Color for abstract 
   }
   else{
-    return "bg-gradient-to-b from-[#181e29] to-[#465970]";
+    return "bg-gradient-to-b from-[#2f0480] to-[#476dde]";
   }
 }
 
-function getClassIcon(abstract, interFace, isStatic){
-  if (interFace) {
+function getClassIcon(isInterface, isAbstract){
+  if (isInterface) {
     return (
-      <Tooltip title="Interface">
-        <AccountTreeIcon fontSize='medium' style={{ color: 'purple', margin:'2px' }}className='hover:'/>
+      <Tooltip title="Interface" className='items-center justify-center mr-1'>
+        <AccountTreeIcon fontSize='medium' style={{ color: 'white', margin:'2px' }}className='hover:'/>
       </Tooltip>
     );
-  } else if (abstract ) {
+  } else if (isAbstract) {
     return (
-      <Tooltip title="Abstract">
-        <PaletteIcon fontSize='medium' style={{ color: 'orange', margin:'2px' }}
+      <Tooltip title="Abstract" className='items-center justify-center mr-1'>
+        <PaletteIcon fontSize='medium' style={{ color: 'white', margin:'2px' }}
         className='hover:'/>
       </Tooltip>
     ); // Color for abstract
   }
   else{
     return (
-      <Tooltip title='Class'>
+      <Tooltip title='Class' className='items-center justify-center mr-1'>
         <ClassIcon fontSize='medium' style={{ color: 'white', margin:'2px' }}
         className='hover:'/>
       </Tooltip>
@@ -105,18 +115,22 @@ function getClasAccess(access) {
   switch (access) {
     case "public":
       return (
-        <Tooltip title="Public">
+        <Tooltip title="Public" className='items-center justify-center mr-2'>
           <PublicIcon fontSize='small'className='rounded-xl bg-green-500  hover:'/>
         </Tooltip>
       );
     case "private":
       return (
-        <Tooltip title="Private">
-          <PublicOffIcon fontSize='small'className='rounded-xl bg-red-500 hover:' />
+        <Tooltip title="Private" className='items-center justify-center mr-2'>
+          <LockIcon fontSize='small'className='rounded-xl bg-red-500 hover:' />
         </Tooltip>
       );
     default:
-      return null; // No icon for other access types
+      return (
+        <Tooltip title="Default" className='items-center justify-center mr-2'>
+          <PublicOffIcon fontSize='small'className='rounded-xl bg-yellow-500 hover:' />
+        </Tooltip>
+      );
   }
 }
 function getClasAccessColor(access) {
@@ -136,51 +150,42 @@ function getClasAccessColor(access) {
 
 const ClassNode = memo(({ data, isConnectable }) => {
   return (
-    <div className={`flex border-4 border-white p-2 overflow-auto rounded ${getClassColor(GetModelAbstract(data.classData), data.classData.interface)} text-white rounded-xl w-[300px] h-[350px]`}>
+    <div className={`flex border-4 border-white p-2 rounded ${getClassColor(GetModelAbstract(data.classData), data.classData.interface)} text-white rounded-xl w-[300px] h-[350px]`}>
       <Handle
         type="target"
         position={Position.Top}
         style={{ background: '#1600dd;' }}
         isConnectable={isConnectable}
       />
-      <div className="flex flex-col flex-grow relative">
-        <div className="flex flex-grow items-center justify-center">
-          <div className="absolute top-0 right-0 p-1 bg-black rounded-xl">
-            {getClassIcon(GetModelStatic(data.classData), GetModelFinal(data.classData), GetModelStatic(data.classData))}
-            {getFinalOrStatic(GetModelFinal(data.classData), GetModelStatic(data.classData))}&nbsp;
-          </div>
-        </div>
-        <div className= "bg-gray-900 rounded-xl flex-grow flex flex-col mt-7">
-          <div className= "flex flex-row">
-            <button value={data.classIndex} className="justify-center items-center flex border-2 border-white m-2 rounded-xl bg-yellow-600 hover:bg-yellow-700 font-small text-white font-bold w-[55%] p-1"
-            onClick={data.onClick}>&nbsp;
-              {getClasAccess(GetModelAccess(data.classData))}&nbsp;
-              {getClasAccess(data.classData)}
+      <div className="flex flex-col flex-grow p-1 relative justify-center">
+        <div className= "flex flex-row h-10">
+          <button value={data.classIndex} className="p-2 items-center flex border-2 border-white rounded-xl bg-black bg-opacity-20 hover:bg-opacity-50 font-small text-white font-bold w-[80%]"
+            onClick={data.onClick}>
+              {getClasAccess(GetModelAccess(data.classData))}
               {data.classData.name}
           </button>
-          <button className="items-center flex border-2 border-white m-2 rounded-xl bg-gray-700 font-small text-white font-bold p-1" onClick={ () => os.execCommand('code -g "' + data.classData.filePath + '":' + data.classData.line) }>
-            <Tooltip title="Edit">
-              <EditIcon fontSize='small'className='rounded-xl bg-white-500 hover:' />
-            </Tooltip>
-          </button>
+          <div className="bg-gray-900 rounded-xl ml-2 p-3 flex-grow flex items-center justify-center">
+            {getClassIcon(data.classData.interface, GetModelAbstract(data.classData))}
           </div>
+        </div>
+        <div className= "bg-gray-900 rounded-xl p-2 flex-grow flex flex-col mt-3 overflow-auto">
           <div className="flex items-center">
-            <p className='font-bold text-[16px] mr-2 mt-2 ml-1'>ATTRIBUTES</p>
+            <p className='font-bold text-[16px] mr-2 mt-6 ml-1'>ATTRIBUTES</p>
           </div>
           <div className="ml-2" style={{ textAlign: "left", fontSize: "15px" }}>
             {data.classData.attributes.map((attribute, index) => (
-              <span onClick={ () => os.execCommand('code -g "' + data.classData.filePath + '":' + attribute.line) } className={`label inline-block rounded-xl ${getAttributeType(attribute.type)} mr-1 p-[2px] items-center justify-center`} key={index}>  &nbsp;
+              <span onClick={ () => os.execCommand('code -g "' + data.classData.filePath + '":' + attribute.line) } className={`m-1 label inline-block rounded-xl ${getAttributeType(attribute.type)} mr-1 p-[2px] items-center justify-center`} key={index}>  &nbsp;
               {getAccessTypeIcon(GetModelAccess(attribute))}
               {getFinalOrStatic(GetModelStatic(attribute), GetModelFinal(attribute))}
               &nbsp;{attribute.name} &nbsp; </span>
             ))}
           </div>
           <div className="flex items-center">
-            <p className='font-bold text-[16px] mr-2 mt-2 ml-1'>METHODS</p>
+            <p className='font-bold text-[16px] mr-2 mt-6 ml-1'>METHODS</p>
           </div>
           <div className="ml-2" style={{ textAlign: "left", fontSize: "15px" }}>
             {data.classData.methods.map((method, index) => (
-              <span onClick={ () => os.execCommand('code -g "' + data.classData.filePath + '":' + method.line) } className={`label inline-block rounded-xl ${getAttributeType(method.type)} mr-1 p-[2px] items-center justify-center`} key={index}>  &nbsp;
+              <span onClick={ () => os.execCommand('code -g "' + data.classData.filePath + '":' + method.line) } className={`m-1 label inline-block rounded-xl ${getAttributeType(method.type)} mr-1 p-[2px] items-center justify-center`} key={index}>  &nbsp;
               {getAccessTypeIcon(GetModelAccess(method))}
               {getFinalOrStatic(GetModelStatic(method), GetModelFinal(method))}
               &nbsp;{method.name} &nbsp; </span>

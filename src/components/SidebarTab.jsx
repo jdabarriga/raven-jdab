@@ -7,7 +7,7 @@ const SidebarTab = ({ sidetabs, handleFocusClass }) => {
             {sidetabs.length > 0 ? (
                 <div className="sidebar-tab">
                     <div>
-                        <h1 className="title">Class Names:</h1>
+                        <h1 className="title">Classes:</h1>
                         <ul className=''>
                             {sidetabs.map((classData, index) => (
                                 <button key={index} className="class-button" onClick={() => handleFocusClass.current.focusOnNode(index)}>
@@ -18,9 +18,7 @@ const SidebarTab = ({ sidetabs, handleFocusClass }) => {
                     </div>
                 </div>
             ) : (
-                <div>
-                    <h1 className="title-red">Class Names Not Available</h1>
-                </div>
+                <div></div>
             )}
         </div>
     );

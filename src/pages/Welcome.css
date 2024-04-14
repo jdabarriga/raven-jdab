@@ -4,8 +4,8 @@
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  width: 100%;
-  background: linear-gradient(to bottom, #292929, #000000); /* Dark Gray to Black */
+  min-width: 100vw;
+  background: linear-gradient(to top, #292929, #000000); /* Dark Gray to Black */
 }
 
 .home-container{
@@ -14,7 +14,7 @@
   justify-content: center;
   min-height: 100vh;
   min-width: 100vw;
-  background: linear-gradient(to bottom, #292929, #000000); /* Dark Gray to Black */
+  background: linear-gradient(to top, #292929, #000000); /* Dark Gray to Black */
 }
 
 body {
@@ -26,7 +26,7 @@ body {
   font-size: 7vw;
   font-weight: bold;
   text-decoration: underline;
-  color: #141414;
+  color: #FFFFFF;
   text-shadow: 
     -3px -3px 0 #000,  
      3px -3px 0 #000,
@@ -51,7 +51,7 @@ body {
 .welcome-description {
   margin-top: 1rem;
   font-size: 2vw; /* Responsive font size */
-  color: #303030;
+  color: #a3a3a3;
 }
 
 .welcome-button {
