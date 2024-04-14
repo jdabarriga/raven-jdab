@@ -486,6 +486,47 @@ let tests = [
         }
       ]
 
+  },
+
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  {
+
+    name: "Test dot notation types",
+
+    code: 
+      `
+      class DotNotation
+      { 
+        java.util.List<Integer> hi;
+      }
+      `,
+
+    expect: 
+      [
+        {
+          name: "DotNotation",
+          attributes: [
+            {
+              name: "hi",
+              value: "",
+              type: "java.util.List<Integer>",
+              modifiers: [],
+              line: 4
+            }
+          ],
+          methods: [],
+          interface: false,
+          extends: "",
+          implements: [],
+          modifiers: [],
+          generics: [],
+          constructors: [],
+          line: 2,
+          filePath: ""
+        }
+      ]
+
   }
 ];
 
