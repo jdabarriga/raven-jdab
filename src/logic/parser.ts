@@ -1,3 +1,4 @@
+import { Handle } from 'reactflow';
 import { VariableModel, MethodModel, ClassModel, Members } from '../structures/classModels';
 import { Token } from './lexers';
 
@@ -84,6 +85,35 @@ export function GetTokensInScope(tokens: Token[], startToken: number): Token[] {
     }
     console.warn("Couldn't find the corresponding closing token in the tokens provided");
     return [];
+}
+
+/**
+ * Parses out the full name of a particular type in dot notation.
+ *
+ * @param {Token[]} tokens - An array of tokens to look through
+ * @param {number} startToken - The token to start on
+ * 
+ * @returns {Token[]} - The tokens included in the dot notaition
+ */
+export function HandleDotNotation(tokens: Token[], startToken: any): Token[] {
+    let output = [tokens[startToken]];
+    let index = startToken;
+    index ++;
+    while (index < tokens.length - 1 && tokens[index].value === ".") {
+        output.push(tokens[index])
+        index ++;
+        output.push(tokens[index])
+        index ++;
+    }
+    return output;
+}
+
+export function CombineTokensToString(tokens: Token[]): string {
+    let out = "";
+    for (let token of tokens) {
+        out += token.value;
+    }
+    return out;
 }
 
 /**
@@ -227,13 +257,15 @@ export function LocateMembers(tokens: Token[], className: string = "", isParamet
                 index ++;
             }
             // The next token should indicate the type, unless this token is the class name in which case this is a constructor
+            let currentTypeTokens = HandleDotNotation(tokens, index);
             if (index < tokens.length) {
-                if (tokens[index].value !== className) {
-                    typeTokens.push(tokens[index]);
-                    index ++;
-                } else {
+                if (CombineTokensToString(currentTypeTokens) === className) {
                     isConstructor = true;
+                } else {
+                    index += currentTypeTokens.length;
+                    typeTokens = [...currentTypeTokens];
                 }
+                
             }
             // For generic types
             if (index < tokens.length && tokens[index].value === "<") {
