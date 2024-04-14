@@ -450,6 +450,42 @@ let tests = [
         }
       ]
 
+  },
+  
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  {
+
+    name: "Test implements",
+
+    code: 
+      `
+      class Someinterfaces implements int1, int2
+      { 
+        
+      }
+      `,
+
+    expect: 
+      [
+        {
+          name: "Someinterfaces",
+          attributes: [],
+          methods: [],
+          interface: false,
+          extends: "",
+          implements: [
+            "int1",
+            "int2"
+          ],
+          modifiers: [],
+          generics: [],
+          constructors: [],
+          line: 2,
+          filePath: ""
+        }
+      ]
+
   }
 ];
 

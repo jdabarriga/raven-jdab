@@ -139,7 +139,7 @@ export function LocateClasses(tokens: Token[]): ClassModel[] {
             }
             // Get implementations
             if (index < tokens.length - 1 && tokens[index].value === "implements") {
-                while (index < tokens.length && tokens[index].value !== ",") {
+                while (index < tokens.length && (tokens[index].value === "," || tokens[index].value === "implements")) {
                     index ++;
                     model.implements.push(tokens[index].value);
                     // Skip generic definitions for implementations
