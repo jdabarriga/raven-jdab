@@ -77,12 +77,9 @@ const ClosableTab = ({ classData, focusRef }) => {
     useImperativeHandle(focusRef, () => ({
 
         focusOnNode(nodeId) {
-            console.log("button clicked")
             if (reactFlowInstance) {
                 const windowWidth = window.innerWidth;
                 const windowHeight = window.innerHeight;
-                console.log("window width: " + windowWidth);
-                console.log("window height: " + windowHeight);
 
                 let xx, yy;
                 if (windowWidth < 1000) {
@@ -92,7 +89,6 @@ const ClosableTab = ({ classData, focusRef }) => {
                     xx = -nodes[nodeId].position.x + (windowWidth / 2) - 475;
                     yy = -nodes[nodeId].position.y + (windowHeight / 2) - 300;
                 }
-
 
                 reactFlowInstance.setViewport(
                     {
@@ -107,45 +103,7 @@ const ClosableTab = ({ classData, focusRef }) => {
             }
         }
     }));
-    
 
-
-
-    /*
-    useImperativeHandle(focusRef, () => ({
-        focusOnNode(nodeId) {
-            console.log("button clicked");
-            if (reactFlowInstance) {
-                const nodeElement = reactFlowInstance.getNode(nodeId);
-                if (nodeElement) {
-                    const { x, y, width, height } = nodeElement.getBoundingClientRect();
-                    const viewportWidth = reactFlowState.width;
-                    const viewportHeight = reactFlowState.height;
-                    console.log("width: " + viewportWidth);
-                    console.log("height: " + viewportHeight);
-
-                    const centerX = viewportWidth / 2;
-                    const centerY = viewportHeight / 2;
-
-                    const newX = x - centerX + width / 2;
-                    const newY = y - centerY + height / 2;
-
-                    reactFlowInstance.setViewport(
-                        {
-                            x: -newX,
-                            y: -newY,
-                            zoom: 1,
-                        },
-                        { duration: 800 }
-                    );
-                }
-            }
-            else {
-                console.log("didn't go");
-            }
-        },
-    }));
-    */
     // Keep track of viewport size
     useEffect(() => {
         if (reactFlowInstance) {
@@ -191,7 +149,7 @@ const ClosableTab = ({ classData, focusRef }) => {
     }
 
     // Creates a new class inspector tab
-    const createClassInspectorTab = useCallback((data = undefined) => {
+    const createClassInspectorTab = useCallback((data) => {
         const newTab = {
             value: `${openTabsCount + 1}`, // Incrementing count when new tab is created
             label: `${data.name}`
@@ -238,7 +196,7 @@ const ClosableTab = ({ classData, focusRef }) => {
         const onClick = (event) => {
             let classIndex = Number(event.target.value);
             let classObject = classData[classIndex];
-            createClassInspectorTab(classObject);
+            if (classObject !== undefined) createClassInspectorTab(classObject);
         }
         if (classData !== prevClassDataId) {
             setNodes((nds) =>
@@ -298,7 +256,7 @@ const ClosableTab = ({ classData, focusRef }) => {
         [classData, setNodes, createClassInspectorTab]);
 
     return (
-        <div className="">
+        <div className="flex flex-col flex-grow w-[100%] h-[100%]">
             <TabContext value={selectedTab}>
                 <div className="flex justify-start items-center">
                     <TabList onChange={handleChange} aria-label="lab API tabs example" className="items-center flex rounded-lg bg-gray-800 color-white h-[50px] mt-3 mx-6  "> {/* this line will edit the single tab on top size */}
@@ -313,10 +271,9 @@ const ClosableTab = ({ classData, focusRef }) => {
                         ))}
                     </TabList>
                 </div>
-            <TabPanel value="1" >
-                <div style={{ position: 'relative' }}>
-                    <button style={{ position: 'absolute', bottom: '20px', right: '20px', border: '4px solid white' }} onClick={() => onLayout('TB')}>LAYOUT</button> {/* edit the layout button */}
-                    <div className="w-[66vw] h-[70vh] bg-gray-800 text-white rounded-2xl"> {/* edit the graph (gray box with the icons) size */}
+            <TabPanel value="1" sx={{ witdh:"100%", height:"100%" }} >
+                    <div className="w-[100%] h-[100%] bg-gray-800 text-white rounded-2xl"> {/* edit the graph (gray box with the icons) size */}
+                    
                         <ReactFlow
                             nodes={nodes}
                             edges={edges}
@@ -327,11 +284,14 @@ const ClosableTab = ({ classData, focusRef }) => {
                             onInit={setReactFlowInstance}
                         >
                             <Controls />
+                            
                             {/* <Background variant="cross" gap={12} size={1} /> */}
                         </ReactFlow>
+                        <div className="pointer-events-none bg-gradient-to-b from-transparent to-[#ffffff40] h-20 w-[100%] relative bottom-20 rounded-b-2xl"></div>
+                        <div className="relative bottom-40 border-white">
+                            <button className="absolute right-10 border-white" onClick={() => onLayout('TB')}>LAYOUT</button>
+                        </div>
                     </div>
-                    <button style={{ marginTop: "0px", border: "4px solid white" }} onClick={() => onLayout('TB')}>LAYOUT</button>
-                </div>
                 </TabPanel>
                 {panels.map((panel) => (
                     <TabPanel key={panel.value} value={panel.value}>

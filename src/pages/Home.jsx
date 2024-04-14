@@ -7,7 +7,7 @@ import { os, filesystem, events } from "@neutralinojs/lib";
 import './Welcome.css';
 
 // Set this to true to have "Open Project Directory" auto generate example classes instead of opening the file picker
-let developerMode = true;
+let developerMode = false;
 
 let CurrentWatcherID = -1;
 
@@ -18,98 +18,7 @@ const Home = () => {
     let classes = [];
     if (developerMode) {
       classes =  [
-        {
-          "name": "NissanGTR",
-          "attributes": [
-              {
-                  "name": "speed",
-                  "value": "value1",
-                  "type": "string",
-                  "modifiers": ["public"],
-                  "line": 1
-              },
-              {
-                  "name": "acceleration",
-                  "value": "value2",
-                  "type": "float",
-                  "modifiers": ["private"],
-                  "line": 2
-              }
-          ],
-          "methods": [
-              {
-                  "name": "turbo",
-                  "parameters": [
-                      {
-                          "name": "param1",
-                          "value": "value1",
-                          "type": "string",
-                          "modifiers": ["public"],
-                          "line": 3
-                      }
-                  ],
-                  "return": "void",
-                  "modifiers": ["public"],
-                  "generics": [],
-                  "line": 3
-              },
-              {
-                  "name": "nos_activate",
-                  "parameters": [],
-                  "return": "string",
-                  "modifiers": ["private"],
-                  "generics": [],
-                  "line": 4
-              }
-          ],
-          "interface": false,
-          "extends": "ParentClass",
-          "implements": ["CarInterface", "VehicleInterface"],
-          "modifiers": ["public", "abstract"],
-          "generics": ["T"],
-          "filePath": "/path/to/file",
-          "line": 5
-      },
-      {
-        name: "ConstructorClass",
-        attributes: [
-          {
-            name: "x",
-            value: "",
-            type: "double",
-            modifiers: [],
-            line: 3
-          }
-        ],
-        methods: [],
-        interface: false,
-        extends: "",
-        implements: [],
-        modifiers: [
-          "public"
-        ],
-        generics: [],
-        constructors: [
-          {
-            name: "ConstructorClass",
-            parameters: [
-              {
-                name: "x",
-                value: "",
-                type: "double",
-                modifiers: [],
-                line: 4
-              }
-            ],
-            return: "",
-            modifiers: [],
-            generics: [],
-            line: 4
-          }
-        ],
-        line: 2,
-        filePath: ""
-      },
+        
       {
         name: "Instance",
         attributes: [
@@ -119,9 +28,259 @@ const Home = () => {
             type: "MyObject",
             modifiers: [],
             line: 4
+          },
+          {
+            name: "obj",
+            value: "MyObject",
+            type: "MyObject",
+            modifiers: [],
+            line: 4
+          },
+          {
+            name: "obj",
+            value: "MyObject",
+            type: "MyObject",
+            modifiers: [],
+            line: 4
+          },
+          {
+            name: "obj",
+            value: "MyObject",
+            type: "MyObject",
+            modifiers: [],
+            line: 4
+          },
+          {
+            name: "obj",
+            value: "MyObject",
+            type: "MyObject",
+            modifiers: [],
+            line: 4
+          },
+          {
+            name: "obj",
+            value: "MyObject",
+            type: "MyObject",
+            modifiers: [],
+            line: 4
+          },
+          {
+            name: "obj",
+            value: "MyObject",
+            type: "MyObject",
+            modifiers: [],
+            line: 4
+          },
+          {
+            name: "obj",
+            value: "MyObject",
+            type: "MyObject",
+            modifiers: [],
+            line: 4
+          },
+          {
+            name: "obj",
+            value: "MyObject",
+            type: "MyObject",
+            modifiers: [],
+            line: 4
+          },
+          {
+            name: "obj",
+            value: "MyObject",
+            type: "MyObject",
+            modifiers: [],
+            line: 4
+          },
+          {
+            name: "obj",
+            value: "MyObject",
+            type: "MyObject",
+            modifiers: [],
+            line: 4
+          },
+          {
+            name: "obj",
+            value: "MyObject",
+            type: "MyObject",
+            modifiers: [],
+            line: 4
+          },
+          {
+            name: "obj",
+            value: "MyObject",
+            type: "MyObject",
+            modifiers: [],
+            line: 4
+          },
+          {
+            name: "obj",
+            value: "MyObject",
+            type: "MyObject",
+            modifiers: [],
+            line: 4
+          },
+          {
+            name: "obj",
+            value: "MyObject",
+            type: "MyObject",
+            modifiers: [],
+            line: 4
+          },
+          {
+            name: "obj",
+            value: "MyObject",
+            type: "MyObject",
+            modifiers: [],
+            line: 4
+          },
+          {
+            name: "obj",
+            value: "MyObject",
+            type: "MyObject",
+            modifiers: [],
+            line: 4
+          },
+          {
+            name: "obj",
+            value: "MyObject",
+            type: "MyObject",
+            modifiers: [],
+            line: 4
+          },
+          {
+            name: "obj",
+            value: "MyObject",
+            type: "MyObject",
+            modifiers: [],
+            line: 4
+          },
+          {
+            name: "obj",
+            value: "MyObject",
+            type: "MyObject",
+            modifiers: [],
+            line: 4
+          },
+          {
+            name: "obj",
+            value: "MyObject",
+            type: "MyObject",
+            modifiers: [],
+            line: 4
+          },
+          {
+            name: "obj",
+            value: "MyObject",
+            type: "MyObject",
+            modifiers: [],
+            line: 4
+          },
+          {
+            name: "obj",
+            value: "MyObject",
+            type: "MyObject",
+            modifiers: [],
+            line: 4
+          },
+          {
+            name: "obj",
+            value: "MyObject",
+            type: "MyObject",
+            modifiers: [],
+            line: 4
           }
         ],
-        methods: [],
+        methods: [
+          {
+            name: "AAAA",
+            parameters: [],
+            return: "AAAA",
+            modifiers: ["public"],
+            generics: [],
+            line: 0
+          },
+          {
+            name: "AAAA",
+            parameters: [],
+            return: "AAAA",
+            modifiers: ["public"],
+            generics: [],
+            line: 0
+          },
+          {
+            name: "AAAA",
+            parameters: [],
+            return: "AAAA",
+            modifiers: ["public"],
+            generics: [],
+            line: 0
+          },
+          {
+            name: "AAAA",
+            parameters: [],
+            return: "AAAA",
+            modifiers: ["public"],
+            generics: [],
+            line: 0
+          },
+          {
+            name: "AAAA",
+            parameters: [],
+            return: "AAAA",
+            modifiers: ["public"],
+            generics: [],
+            line: 0
+          },
+          {
+            name: "AAAA",
+            parameters: [],
+            return: "AAAA",
+            modifiers: ["public"],
+            generics: [],
+            line: 0
+          },
+          {
+            name: "AAAA",
+            parameters: [],
+            return: "AAAA",
+            modifiers: ["public"],
+            generics: [],
+            line: 0
+          },
+          {
+            name: "AAAA",
+            parameters: [],
+            return: "AAAA",
+            modifiers: ["public"],
+            generics: [],
+            line: 0
+          },
+          {
+            name: "AAAA",
+            parameters: [],
+            return: "AAAA",
+            modifiers: ["public"],
+            generics: [],
+            line: 0
+          },
+          {
+            name: "AAAA",
+            parameters: [],
+            return: "AAAA",
+            modifiers: ["public"],
+            generics: [],
+            line: 0
+          },
+          {
+            name: "AAAA",
+            parameters: [],
+            return: "AAAA",
+            modifiers: ["public"],
+            generics: [],
+            line: 0
+          }
+        ],
         interface: false,
         extends: "NissanGTR",
         implements: [],
@@ -142,7 +301,7 @@ const Home = () => {
   }
 
   events.on('watchFile', async (evt) => {
-    if(CurrentWatcherID == evt.detail.id) {
+    if (!developerMode && CurrentWatcherID == evt.detail.id) {
         let classes = await RetrieveJavaClassModels(evt.detail.dir);
         setData(classes);
     }
@@ -159,17 +318,15 @@ const Home = () => {
                 <Link to="/" className="mr-5">
                   <img src={RavenLogo} alt="Raven Logo" className="raven-logo" /> {/* can be edited in welcome.css file */}
                 </Link>
-                <button className="directory-button" onClick={retrieveClassModel}>Open Project Directory</button> {/* can be edited in welcome.css file */}
+                <button className="directory-button flex items-center" onClick={retrieveClassModel}>Open Project Directory</button> {/* can be edited in welcome.css file */}
               </header>
               <div className=''>
                 <SidebarTab sidetabs={data} handleFocusClass={focusRef} />
               </div>
           </div>
         </div>
-        <div className="w-6/8 bg-[black] flex p-0 m-1 rounded-3xl border w-[70vw] h-[85vh] text-white"> {/* edits the outside border of the graph, the gray outline */}
-            <div className='w-[70vw] h-[60vh]'>
-              <CloseableTab classData={data} focusRef={focusRef} />
-            </div>
+        <div className="bg-[black] p-0 m-1 rounded-3xl border w-[70vw] h-[85vh] text-white"> {/* edits the outside border of the graph, the gray outline */}
+            <CloseableTab classData={data} focusRef={focusRef} />
         </div>
       </div>
     </div>
