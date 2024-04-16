@@ -13,6 +13,7 @@ import { Handle, Position } from 'reactflow';
 import { GetModelAccess, GetModelStatic, GetModelFinal, GetModelAbstract } from '../structures/classModels';
 import { os } from "@neutralinojs/lib";
 import InventoryIcon from '@mui/icons-material/Inventory';
+import CategoryIcon from '@mui/icons-material/Category';
 
 // Function to determine the color class based on attribute type
 function getAttributeType(type) {
@@ -61,12 +62,12 @@ function getAccessTypeIcon(access) {
 
 function getClassColor(abstract, interFace) {
   if (interFace) {
-    return "bg-gradient-to-b from-[#754302] to-[#d4d133]"; // Color for interface
+    return "bg-gradient-to-b from-[#2e1503] to-[#4d4505]"; // Color for interface
   } else if (abstract) {
-    return "bg-gradient-to-b from-[#940000] to-[#de3333]"; // Color for abstract 
+    return "bg-gradient-to-b from-[#290316] to-[#630404]"; // Color for abstract 
   }
   else{
-    return "bg-gradient-to-b from-[#2f0480] to-[#476dde]";
+    return "bg-gradient-to-b from-[#0f052e] to-[#0c195e]";
   }
 }
 
@@ -80,7 +81,7 @@ function getClassIcon(isInterface, isAbstract){
   } else if (isAbstract) {
     return (
       <Tooltip title="Abstract" className='items-center justify-center mr-1'>
-        <PaletteIcon fontSize='medium' style={{ color: 'white', margin:'2px' }}
+        <CategoryIcon fontSize='medium' style={{ color: 'white', margin:'2px' }}
         className='hover:'/>
       </Tooltip>
     ); // Color for abstract

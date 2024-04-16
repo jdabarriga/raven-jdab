@@ -8,11 +8,13 @@ import PublicIcon from '@mui/icons-material/Public';
 import { GetModelAbstract, GetModelAccess } from "../structures/classModels";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import EditOffIcon from '@mui/icons-material/EditOff';
+import AccountTreeIcon from '@mui/icons-material/AccountTree';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
 import LockIcon from '@mui/icons-material/Lock';
 import { Switch} from "@material-tailwind/react";
 import { os } from "@neutralinojs/lib"
 import PublicOffIcon from '@mui/icons-material/PublicOff';
+import CategoryIcon from '@mui/icons-material/Category';
 
 // dropdown imports
 import * as React from 'react';
@@ -27,12 +29,12 @@ import Select from '@mui/material/Select';
 const ClassInspector = ({data}) => {
     function getClassColor(abstract, interFace) {
       if (interFace) {
-        return "bg-gradient-to-b from-[#754302] to-[#d4d133]"; // Color for interface
+        return "bg-gradient-to-b from-[#2e1503] to-[#4d4505]"; // Color for interface
       } else if (abstract) {
-        return "bg-gradient-to-b from-[#940000] to-[#de3333]"; // Color for abstract 
+        return "bg-gradient-to-b from-[#290316] to-[#630404]"; // Color for abstract 
       }
       else{
-        return "bg-gradient-to-b from-[#2f0480] to-[#476dde]";
+        return "bg-gradient-to-b from-[#0f052e] to-[#0c195e]";
       }
       }
     const [name, setName] = useState(data.name);
@@ -50,7 +52,7 @@ const ClassInspector = ({data}) => {
       } else if (isAbstract) {
         return (
           <Tooltip title="Abstract" className='items-center justify-center mr-1'>
-            <PaletteIcon fontSize='large' style={{ color: 'white', margin:'4px' }}
+            <CategoryIcon fontSize='large' style={{ color: 'white', margin:'4px' }}
             className='hover:'/>
           </Tooltip>
         ); // Color for abstract
@@ -151,7 +153,7 @@ const ClassInspector = ({data}) => {
                         <div className="flex items-center">
                             <strong class>Access: </strong>
                             &nbsp;
-                            {GetModelAccess(data) === "" ? GetModelAccess(data) : "Default (Package Private)"}
+                            {GetModelAccess(data) !== undefined ? GetModelAccess(data) : "Default (Package Private)"}
                         </div>
                         <div className="flex items-center">
                             <strong>Interface: </strong>
