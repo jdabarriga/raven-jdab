@@ -35,7 +35,7 @@ export class JavaTokenizer {
     }
 
     private isOperator(char: string): boolean {
-        return /[+\-*/=<>!&|]/.test(char);
+        return /[+\-*<>/=!&|]/.test(char);
     }
 
     private isQuote(char: string): boolean {
@@ -99,7 +99,9 @@ export class JavaTokenizer {
     }
 
     private readOperator(): Token {
-        const value = this.readWhile((char) => this.isOperator(char));
+        // While it may make sense to consider a series of operators as one token, this can cause issues with parsing nested generics
+        const value = this.code[this.index];
+        this.index++;
         this.lastToken = new Token('OPERATOR', value, this.line);
         return new Token('OPERATOR', value, this.line);
     }

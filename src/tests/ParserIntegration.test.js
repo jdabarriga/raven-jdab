@@ -621,6 +621,43 @@ let tests = [
           filePath: ""
         }
       ]
+  },
+
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  {
+    name: "Test nested generics",
+    code:
+      `
+          class NestedGenerics
+          { 
+            public ArrayList<ArrayList<Comparable>> arrlist;
+          }
+          `,
+    expect:
+      [
+        {
+          name: "NestedGenerics",
+          attributes: [
+            {
+              name: "arrlist",
+              value: "",
+              type: "ArrayList<ArrayList<Comparable>>",
+              modifiers: ["public"],
+              line: 4
+            }
+          ],
+          methods: [],
+          interface: false,
+          extends: "",
+          implements: [],
+          modifiers: [],
+          generics: [],
+          constructors: [],
+          line: 2,
+          filePath: ""
+        }
+      ]
   }
 
 ];

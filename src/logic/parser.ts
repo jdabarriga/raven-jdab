@@ -240,7 +240,7 @@ export function LocateMembers(tokens: Token[], className: string = "", isParamet
                 index ++;
             }
             // For generic method definitions
-            if (index < tokens.length && tokens[index].value === "<") {
+            while (index < tokens.length && tokens[index].value === "<") {
                 methodGenericTokens.push(tokens[index]);
                 let genericTokens = GetTokensInScope(tokens, index);
                 methodGenericTokens.push(...genericTokens);
@@ -269,7 +269,7 @@ export function LocateMembers(tokens: Token[], className: string = "", isParamet
                 
             }
             // For generic types
-            if (index < tokens.length && tokens[index].value === "<") {
+            while (index < tokens.length && tokens[index].value === "<") {
                 typeTokens.push(tokens[index]);
                 let genericTokens = GetTokensInScope(tokens, index);
                 typeTokens.push(...genericTokens);
