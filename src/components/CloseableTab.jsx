@@ -221,6 +221,26 @@ const ClosableTab = ({ classData, focusRef }) => {
                             };
                             retval.push(edge);
                         }
+                        if (classData[i].implements.includes(classData[j].name)) {
+                            let edge = {
+                                type: 'step',
+                                source: (j + 1).toString(),
+                                target: (i + 1).toString(),
+                                id: i.toString(),
+                                animated: true,
+                                markerStart: {
+                                    type: MarkerType.ArrowClosed,
+                                    width: 20,
+                                    height: 20,
+                                    color: '#FFFFFF',
+                                },
+                                style: {
+                                    strokeWidth: 5,
+                                    stroke: '#FFFFFF',
+                                },
+                            };
+                            retval.push(edge);
+                        }
                     }
                 }
                 setLayoutStuff(!layoutStuff);
