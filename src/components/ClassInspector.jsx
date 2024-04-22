@@ -61,6 +61,46 @@ const ClassInspector = ({ data }) => {
             </div>
           </div>
         </div>
+
+        <div className="bg-gray-800 p-2 mt-2 rounded-xl m-2 p">
+          <strong>Constructors</strong>
+          <div className="bg-gray-800 items-center">
+            <div className="flex flex-wrap justify-start">
+              {data.constructors.map((constructor, index) => (
+                <div key={index} className={` border-white border-2 font-bold p-1 rounded-xl bg-violet-700 rounded m-2`}>
+
+                  <Tooltip title="Edit in IDE">
+                    <button className="p-1 w-[100%] items-center border-2 border-white rounded-xl bg-black bg-opacity-20 hover:bg-opacity-50 text-l text-white font-bold mb-1"
+                      onClick={() => os.execCommand('code -g "' + data.filePath + '":' + constructor.line)}>
+                      <div className="m-1">
+                        <EditIcon fontSize='small' />
+                      </div>
+                    </button>
+                  </Tooltip>
+
+                  <div>
+                    <div className="border-2 border-white rounded-xl bg-purple-900 items-center p-2">
+                      <span>Parameters</span>
+
+                      {constructor.parameters.map((param, paramIndex) => (
+
+                        <div className={`bg-purple-800 rounded-l rounded-r pl-2 pr-2 mt-2`}>
+                          <p key={paramIndex} className="text-left text-white">
+                            Name: <span className="text-white">{param.name}</span>
+                          </p>
+                          <p key={paramIndex} className="text-left text-white">
+                            Type: <span className="text-white">{param.type}</span>
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
         <div className="bg-gray-800 p-2 mt-2 rounded-xl m-2 p">
           <strong>Attributes</strong>
           <div className="bg-gray-800 items-center">
@@ -92,6 +132,7 @@ const ClassInspector = ({ data }) => {
             </div>
           </div>
         </div>
+
         <div className="bg-gray-800 p-2 mt-2 rounded-xl m-2 p">
           <strong>Methods</strong>
           <div className="bg-gray-800 items-center">
@@ -110,17 +151,19 @@ const ClassInspector = ({ data }) => {
                     </button>
                   </Tooltip>
 
-                  <div className={`p-1 m-2`}>
-                    <p className="text-left text-white">Access: <span className="text-white">{GetModelAccess(method)}</span></p>
-                    <p className="text-left text-white">Static: <span className="text-white">{GetModelStatic(method) ? "Yes" : "No"}</span></p>
-                    <p className="text-left text-white">Final: <span className="text-white">{GetModelFinal(method) ? "Yes" : "No"}</span></p>
-                    <p className="text-left text-white">Return: <span className="text-white">{method.return}</span></p>
+                  <div className={`mt-2`}>
+                    <div className={`ml-2`}>
+                      <p className="text-left text-white">Access: <span className="text-white">{GetModelAccess(method)}</span></p>
+                      <p className="text-left text-white">Static: <span className="text-white">{GetModelStatic(method) ? "Yes" : "No"}</span></p>
+                      <p className="text-left text-white">Final: <span className="text-white">{GetModelFinal(method) ? "Yes" : "No"}</span></p>
+                      <p className="text-left text-white">Return: <span className="text-white">{method.return}</span></p>
+                    </div>
                     <div className=" border-2 border-white rounded-xl bg-purple-900 mt-2 items-center p-2">
                       <span>Parameters</span>
 
                       {method.parameters.map((param, paramIndex) => (
 
-                        <div className="bg-purple-700 rounded-l rounded-r pl-2 pr-2 mt-2">
+                        <div className={`bg-purple-800 rounded-l rounded-r pl-2 pr-2 mt-2`}>
                           <p key={paramIndex} className="text-left text-white">
                             Name: <span className="text-white">{param.name}</span>
                           </p>

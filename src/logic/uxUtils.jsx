@@ -62,10 +62,12 @@ export function getMemberTypeColor(type) {
       return "bg-purple-700 p-1";
     case "char":
       return "bg-teal-700 p-1";
-    case "bool":
+    case "boolean":
       return "bg-lime-700 p-1";
     case "String":
       return "bg-pink-700 p-1";
+    case "void":
+      return "bg-black-700 p-1";
     default:
       return "bg-gray-700 p-1"; // Default color for unknown types
   }

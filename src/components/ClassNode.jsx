@@ -57,7 +57,9 @@ const ClassNode = memo(({ data, isConnectable }) => {
             {getClassIcon(data.classData.interface, GetModelAbstract(data.classData))}
           </div>
         </div>
+
         <div className="bg-gray-900 rounded-xl p-2 flex-grow flex flex-col mt-3 overflow-auto">
+
           <div className="flex items-center">
             <p className='font-bold text-[16px] mr-2 ml-1'>ATTRIBUTES</p>
           </div>
@@ -69,17 +71,19 @@ const ClassNode = memo(({ data, isConnectable }) => {
                 &nbsp;{limitString(attribute.name, 20)} &nbsp; </span>
             ))}
           </div>
+
           <div className="flex items-center">
             <p className='font-bold text-[16px] mr-2 mt-6 ml-1'>METHODS</p>
           </div>
           <div className="ml-2" style={{ textAlign: "left", fontSize: "15px" }}>
             {data.classData.methods.map((method, index) => (
-              <span onClick={() => os.execCommand('code -g "' + data.classData.filePath + '":' + method.line)} className={`m-1 cursor-pointer label inline-block rounded-xl ${getMemberTypeColor(method.type)} mr-1 p-[2px] h-[28px] items-center justify-center`} key={index}>  &nbsp;
+              <span onClick={() => os.execCommand('code -g "' + data.classData.filePath + '":' + method.line)} className={`m-1 cursor-pointer label inline-block rounded-xl ${getMemberTypeColor(method.return)} mr-1 p-[2px] h-[28px] items-center justify-center`} key={index}>  &nbsp;
                 {getAccessTypeIcon(GetModelAccess(method))}
                 {getFinalOrStatic(GetModelStatic(method), GetModelFinal(method))}
                 &nbsp;{limitString(method.name, 20)} &nbsp; </span>
             ))}
           </div>
+
         </div>
       </div>
       <Handle
