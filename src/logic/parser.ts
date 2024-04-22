@@ -311,7 +311,7 @@ export function LocateMembers(tokens: Token[], className: string = "", isParamet
                 let parameterMembers = LocateMembers(valueTokens, "", true);
                 index += valueTokens.length + 2;
                 let content = GetTokensInScope(tokens, index);
-                index += content.length + 2;
+                index += content.length + 1;
                 if (!isConstructor) {
                     ret.methods.push({
                         modifiers: [...modifierTokens.map((t) => t.value)], 
@@ -346,7 +346,6 @@ export function LocateMembers(tokens: Token[], className: string = "", isParamet
             } 
             // If there is a comma here, it means that the code is defining multiple attribues on one line
             while ((index < tokens.length && tokens[index].value === ",") && !isParameters) {
-                // TODO: THIS IS UNSAFE
                 index ++;
                 nameToken.value = tokens[index].value;
                 index ++;

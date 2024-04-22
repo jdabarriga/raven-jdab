@@ -33,15 +33,16 @@ export interface Members {
     methods: MethodModel[],
     constructors: MethodModel[]
 }
-export function GetModelAccess(dataModel) {
-    return dataModel.modifiers.filter(element => ACCESS_MODIFIERS.includes(element))[0];
+export function GetModelAccess(dataModel) : string {
+    let acc = dataModel.modifiers.filter(element => ACCESS_MODIFIERS.includes(element))[0];
+    return acc === undefined ? "default" : acc;
 }
-export function GetModelStatic(dataModel) {
+export function GetModelStatic(dataModel) : boolean {
     return dataModel.modifiers.includes("static");
 }
-export function GetModelFinal(dataModel) {
+export function GetModelFinal(dataModel) : boolean {
     return dataModel.modifiers.includes("final");
 }
-export function GetModelAbstract(dataModel) {
+export function GetModelAbstract(dataModel) : boolean {
     return dataModel.modifiers.includes("abstract");
 }

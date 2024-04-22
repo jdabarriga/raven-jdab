@@ -527,6 +527,64 @@ let tests = [
         }
       ]
 
+  },
+  
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  {
+
+    name: "Test public method defined after constructor",
+
+    code: 
+      `
+      class MethodClass
+      { 
+        MethodClass(){
+          // constructor stuff
+        }
+        public void method() {
+          this.hi = hi;
+        }
+      }
+      `,
+
+    expect: 
+      [
+        {
+          name: "MethodClass",
+          attributes: [],
+          methods: [
+            {
+              name: "method",
+              parameters: [],
+              return: "void",
+              modifiers: [
+                "public"
+              ],
+              generics: [],
+              line: 7
+            }
+          ],
+          interface: false,
+          extends: "",
+          implements: [],
+          modifiers: [],
+          generics: [],
+          constructors: [
+            {
+              name: "MethodClass",
+              parameters: [],
+              return: "",
+              modifiers: [],
+              generics: [],
+              line: 4
+            }
+          ],
+          line: 2,
+          filePath: ""
+        }
+      ]
+
   }
 ];
 

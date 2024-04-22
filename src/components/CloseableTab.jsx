@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useImperativeHandle } from "react";
-import { useInstance } from 'reactflow';
+import { fitView } from 'reactflow';
 import { Tab } from '@mui/material';
 import { TabList, TabContext, TabPanel } from '@mui/lab';
 import CloseIcon from '@mui/icons-material/Close';
@@ -9,7 +9,7 @@ import 'reactflow/dist/style.css';
 import './ClassNode.css';
 import dagre from 'dagre';
 import ClassInspector from './ClassInspector';
-import ReactFlow, { Controls, useNodesState, useEdgesState, MarkerType, useReactFlow } from 'reactflow';
+import ReactFlow, { Controls, useNodesState, useEdgesState, MarkerType, useReactFlow, Background, BackgroundVariant } from 'reactflow';
 import '../pages/Welcome.css';
 
 
@@ -21,7 +21,7 @@ const nodeTypes = {
 
 // Specifically for the auto layout feature
 const nodeWidth = 400;
-const nodeHeight = 500;
+const nodeHeight = 800;
 
 const dagreGraph = new dagre.graphlib.Graph();
 dagreGraph.setDefaultEdgeLabel(() => ({}));
@@ -73,33 +73,14 @@ const ClosableTab = ({ classData, focusRef }) => {
         zoom: 1,
     });
 
-
     useImperativeHandle(focusRef, () => ({
 
         focusOnNode(nodeId) {
             if (reactFlowInstance) {
-                const windowWidth = window.innerWidth;
-                const windowHeight = window.innerHeight;
-
-                let xx, yy;
-                if (windowWidth < 1000) {
-                    xx = -nodes[nodeId].position.x + (windowWidth / 2) - 450;
-                    yy = -nodes[nodeId].position.y + (windowHeight / 2) - 300;
-                } else {
-                    xx = -nodes[nodeId].position.x + (windowWidth / 2) - 475;
-                    yy = -nodes[nodeId].position.y + (windowHeight / 2) - 300;
-                }
-
-                reactFlowInstance.setViewport(
-                    {
-                        //x: -nodes[nodeId].position.x + (windowWidth / 2) - 475,
-                        //y: -nodes[nodeId].position.y + (windowHeight / 2) - 300,
-                        x: xx,
-                        y: yy,
-                        zoom: 1.1,
-                    },
-                    { duration: 800 }
-                );
+                reactFlowInstance.fitView({
+                    nodes: [nodes[nodeId]],
+                    duration: 800
+                  });
             }
         }
     }));
@@ -111,8 +92,6 @@ const ClosableTab = ({ classData, focusRef }) => {
             setReactFlowState({ width, height, zoom });
         }
     }, [reactFlowInstance]);
-
-    //const [reactFlowInstance, setReactFlowInstance] = useState(null);
 
     const prevClassDataIdRef = useRef();
     useEffect(() => {
@@ -260,7 +239,7 @@ const ClosableTab = ({ classData, focusRef }) => {
             <TabContext value={selectedTab}>
                 <div className="flex justify-start items-center">
                     <TabList onChange={handleChange} aria-label="lab API tabs example" className="items-center flex rounded-lg bg-gray-800 color-white h-[50px] mt-3 mx-6  "> {/* this line will edit the single tab on top size */}
-                    <Tab label="Main Tab" value="1" className="flex text-center bg-black text-white rounded-l-lg mx-1" style={{ color: 'white'}} />
+                        <Tab label="Main Tab" value="1" className="flex text-center bg-black text-white rounded-l-lg mx-1" style={{ color: 'white' }} />
                         {tabs.map((tab) => (
                             <Tab
                                 icon={<CloseIcon className="hover:bg-red-700 rounded-full" onClick={() => handleClose(tab.value)} />}
@@ -271,9 +250,8 @@ const ClosableTab = ({ classData, focusRef }) => {
                         ))}
                     </TabList>
                 </div>
-            <TabPanel value="1" sx={{ witdh:"100%", height:"100%" }} >
-                    <div className="w-[100%] h-[100%] bg-gray-800 text-white rounded-2xl"> {/* edit the graph (gray box with the icons) size */}
-                    
+                <TabPanel value="1" sx={{ witdh: "100%", height: "100%" }} >
+                    <div className="w-[100%] h-[100%] bg-gray-800 text-white rounded-2xl" id="react-flow-graph-container"> {/* edit the graph (gray box with the icons) size */}
                         <ReactFlow
                             nodes={nodes}
                             edges={edges}
@@ -282,13 +260,12 @@ const ClosableTab = ({ classData, focusRef }) => {
                             proOptions={{ hideAttribution: true }}
                             nodeTypes={nodeTypes}
                             onInit={setReactFlowInstance}
+                            minZoom={0.1}
                         >
                             <Controls />
-                            
-                            {/* <Background variant="cross" gap={12} size={1} /> */}
                         </ReactFlow>
-                        <div className="pointer-events-none bg-gradient-to-b from-transparent to-[#ffffff40] h-20 w-[100%] relative bottom-20 rounded-b-2xl"></div>
-                        <div className="relative bottom-40 border-white">
+                        
+                        <div className="relative bottom-20 border-white">
                             <button className="absolute right-10 border-white" onClick={() => onLayout('TB')}>LAYOUT</button>
                         </div>
                     </div>

@@ -20,263 +20,50 @@ const Home = () => {
       classes =  [
         
       {
-        name: "Instance",
+        name: "ExampleClass",
         attributes: [
           {
-            name: "obj",
-            value: "MyObject",
-            type: "MyObject",
+            name: "exampleInt",
+            value: "",
+            type: "int",
             modifiers: [],
             line: 4
           },
           {
-            name: "obj",
-            value: "MyObject",
-            type: "MyObject",
+            name: "exampleDouble",
+            value: "",
+            type: "double",
             modifiers: [],
             line: 4
           },
           {
-            name: "obj",
-            value: "MyObject",
-            type: "MyObject",
+            name: "exampleString",
+            value: "",
+            type: "String",
             modifiers: [],
             line: 4
           },
           {
-            name: "obj",
-            value: "MyObject",
-            type: "MyObject",
+            name: "exampleBool",
+            value: "",
+            type: "bool",
             modifiers: [],
             line: 4
           },
           {
-            name: "obj",
-            value: "MyObject",
-            type: "MyObject",
-            modifiers: [],
-            line: 4
-          },
-          {
-            name: "obj",
-            value: "MyObject",
-            type: "MyObject",
-            modifiers: [],
-            line: 4
-          },
-          {
-            name: "obj",
-            value: "MyObject",
-            type: "MyObject",
-            modifiers: [],
-            line: 4
-          },
-          {
-            name: "obj",
-            value: "MyObject",
-            type: "MyObject",
-            modifiers: [],
-            line: 4
-          },
-          {
-            name: "obj",
-            value: "MyObject",
-            type: "MyObject",
-            modifiers: [],
-            line: 4
-          },
-          {
-            name: "obj",
-            value: "MyObject",
-            type: "MyObject",
-            modifiers: [],
-            line: 4
-          },
-          {
-            name: "obj",
-            value: "MyObject",
-            type: "MyObject",
-            modifiers: [],
-            line: 4
-          },
-          {
-            name: "obj",
-            value: "MyObject",
-            type: "MyObject",
-            modifiers: [],
-            line: 4
-          },
-          {
-            name: "obj",
-            value: "MyObject",
-            type: "MyObject",
-            modifiers: [],
-            line: 4
-          },
-          {
-            name: "obj",
-            value: "MyObject",
-            type: "MyObject",
-            modifiers: [],
-            line: 4
-          },
-          {
-            name: "obj",
-            value: "MyObject",
-            type: "MyObject",
-            modifiers: [],
-            line: 4
-          },
-          {
-            name: "obj",
-            value: "MyObject",
-            type: "MyObject",
-            modifiers: [],
-            line: 4
-          },
-          {
-            name: "obj",
-            value: "MyObject",
-            type: "MyObject",
-            modifiers: [],
-            line: 4
-          },
-          {
-            name: "obj",
-            value: "MyObject",
-            type: "MyObject",
-            modifiers: [],
-            line: 4
-          },
-          {
-            name: "obj",
-            value: "MyObject",
-            type: "MyObject",
-            modifiers: [],
-            line: 4
-          },
-          {
-            name: "obj",
-            value: "MyObject",
-            type: "MyObject",
-            modifiers: [],
-            line: 4
-          },
-          {
-            name: "obj",
-            value: "MyObject",
-            type: "MyObject",
-            modifiers: [],
-            line: 4
-          },
-          {
-            name: "obj",
-            value: "MyObject",
-            type: "MyObject",
-            modifiers: [],
-            line: 4
-          },
-          {
-            name: "obj",
-            value: "MyObject",
-            type: "MyObject",
-            modifiers: [],
-            line: 4
-          },
-          {
-            name: "obj",
-            value: "MyObject",
-            type: "MyObject",
+            name: "exampleLong",
+            value: "",
+            type: "long",
             modifiers: [],
             line: 4
           }
         ],
         methods: [
           {
-            name: "AAAA",
+            name: "WWWWWWWWWWWWWWWWWW",
             parameters: [],
             return: "AAAA",
-            modifiers: ["public"],
-            generics: [],
-            line: 0
-          },
-          {
-            name: "AAAA",
-            parameters: [],
-            return: "AAAA",
-            modifiers: ["public"],
-            generics: [],
-            line: 0
-          },
-          {
-            name: "AAAA",
-            parameters: [],
-            return: "AAAA",
-            modifiers: ["public"],
-            generics: [],
-            line: 0
-          },
-          {
-            name: "AAAA",
-            parameters: [],
-            return: "AAAA",
-            modifiers: ["public"],
-            generics: [],
-            line: 0
-          },
-          {
-            name: "AAAA",
-            parameters: [],
-            return: "AAAA",
-            modifiers: ["public"],
-            generics: [],
-            line: 0
-          },
-          {
-            name: "AAAA",
-            parameters: [],
-            return: "AAAA",
-            modifiers: ["public"],
-            generics: [],
-            line: 0
-          },
-          {
-            name: "AAAA",
-            parameters: [],
-            return: "AAAA",
-            modifiers: ["public"],
-            generics: [],
-            line: 0
-          },
-          {
-            name: "AAAA",
-            parameters: [],
-            return: "AAAA",
-            modifiers: ["public"],
-            generics: [],
-            line: 0
-          },
-          {
-            name: "AAAA",
-            parameters: [],
-            return: "AAAA",
-            modifiers: ["public"],
-            generics: [],
-            line: 0
-          },
-          {
-            name: "AAAA",
-            parameters: [],
-            return: "AAAA",
-            modifiers: ["public"],
-            generics: [],
-            line: 0
-          },
-          {
-            name: "AAAA",
-            parameters: [],
-            return: "AAAA",
-            modifiers: ["public"],
+            modifiers: ["public", "final", "static"],
             generics: [],
             line: 0
           }
