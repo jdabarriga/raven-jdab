@@ -658,6 +658,48 @@ let tests = [
           filePath: ""
         }
       ]
+  },
+
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  {
+    name: "Test throws",
+    code:
+      `
+          class TestThrows
+          { 
+            public void exceptionyThrowy() throws IOException {
+
+            }
+          }
+          `,
+    expect:
+      [
+        {
+          name: "TestThrows",
+          attributes: [],
+          methods: [
+            {
+              name: "exceptionyThrowy",
+              parameters: [],
+              return: "void",
+              modifiers: [
+                "public"
+              ],
+              generics: [],
+              line: 4
+            }
+          ],
+          interface: false,
+          extends: "",
+          implements: [],
+          modifiers: [],
+          generics: [],
+          constructors: [],
+          line: 2,
+          filePath: ""
+        }
+      ]
   }
 
 ];

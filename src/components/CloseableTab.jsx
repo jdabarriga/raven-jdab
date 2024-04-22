@@ -108,6 +108,12 @@ const ClosableTab = ({ classData, focusRef }) => {
             );
             setNodes([...layoutedNodes]);
             setEdges([...layoutedEdges]);
+            if (reactFlowInstance) {
+                reactFlowInstance.fitView({
+                    nodes: nodes,
+                    duration: 800
+                  });
+            }
         },
         [nodes, edges]
     );
