@@ -606,7 +606,7 @@ let tests = [
               name: "arr",
               value: "",
               type: "int[][]",
-              modifiers: [],
+              modifiers: ["public"],
               line: 4
             }
           ],
