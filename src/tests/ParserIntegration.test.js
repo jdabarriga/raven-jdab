@@ -1,5 +1,5 @@
-import {JavaTokenizer} from "../logic/lexers";
-import {LocateClasses} from "../logic/parser";
+import { JavaTokenizer } from "../logic/lexers";
+import { LocateClasses } from "../logic/parser";
 
 // Fill out this array for more tests. Each element should be a structure with each of the following key-value pairs:
 // name: The name of the test
@@ -11,7 +11,7 @@ let tests = [
 
   {
 
-    name: "Test empty class", 
+    name: "Test empty class",
 
     code: "class VerySimpleClass { }",
 
@@ -40,7 +40,7 @@ let tests = [
 
     name: "Test class with just public static void main",
 
-    code: 
+    code:
       `
       class PublicStaticVoidMainStringArgs {
         public static void main(String[] args) {
@@ -49,7 +49,7 @@ let tests = [
       }
       `,
 
-    expect: 
+    expect:
       [
         {
           name: "PublicStaticVoidMainStringArgs",
@@ -94,14 +94,14 @@ let tests = [
 
     name: "Test class with public static undefined int attribute",
 
-    code: 
+    code:
       `
       class AttributeClass {
         public static int MyAttribute;
       }
       `,
 
-    expect: 
+    expect:
       [
         {
           name: "AttributeClass",
@@ -137,14 +137,14 @@ let tests = [
 
     name: "Test class with private final defined short attribute",
 
-    code: 
+    code:
       `
       class AttributeClass {
         private final short MyAttribute = 5;
       }
       `,
 
-    expect: 
+    expect:
       [
         {
           name: "AttributeClass",
@@ -180,7 +180,7 @@ let tests = [
 
     name: "Test public class with constructor and modifierless attribute",
 
-    code: 
+    code:
       `
       public class ConstructorClass {
         double x;
@@ -190,7 +190,7 @@ let tests = [
       }
       `,
 
-    expect: 
+    expect:
       [
         {
           name: "ConstructorClass",
@@ -242,7 +242,7 @@ let tests = [
 
     name: "Test multiple attribute definitions",
 
-    code: 
+    code:
       `
       public class MultipleAttributeDefinitions {
         private static double x, y, z;
@@ -251,7 +251,7 @@ let tests = [
       }
       `,
 
-    expect: 
+    expect:
       [
         {
           name: "MultipleAttributeDefinitions",
@@ -360,7 +360,7 @@ let tests = [
 
     name: "Test generics",
 
-    code: 
+    code:
       `
       class Generic<T> 
       { 
@@ -371,7 +371,7 @@ let tests = [
       }
       `,
 
-    expect: 
+    expect:
       [
         {
           name: "Generic",
@@ -417,7 +417,7 @@ let tests = [
 
     name: "Test new instance attribute",
 
-    code: 
+    code:
       `
       class Instance
       { 
@@ -425,7 +425,7 @@ let tests = [
       }
       `,
 
-    expect: 
+    expect:
       [
         {
           name: "Instance",
@@ -451,14 +451,14 @@ let tests = [
       ]
 
   },
-  
+
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   {
 
     name: "Test implements",
 
-    code: 
+    code:
       `
       class Someinterfaces implements int1, int2
       { 
@@ -466,7 +466,7 @@ let tests = [
       }
       `,
 
-    expect: 
+    expect:
       [
         {
           name: "Someinterfaces",
@@ -494,7 +494,7 @@ let tests = [
 
     name: "Test dot notation types",
 
-    code: 
+    code:
       `
       class DotNotation
       { 
@@ -502,7 +502,7 @@ let tests = [
       }
       `,
 
-    expect: 
+    expect:
       [
         {
           name: "DotNotation",
@@ -528,14 +528,14 @@ let tests = [
       ]
 
   },
-  
+
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   {
 
     name: "Test public method defined after constructor",
 
-    code: 
+    code:
       `
       class MethodClass
       { 
@@ -548,7 +548,7 @@ let tests = [
       }
       `,
 
-    expect: 
+    expect:
       [
         {
           name: "MethodClass",
@@ -584,8 +584,45 @@ let tests = [
           filePath: ""
         }
       ]
+  },
 
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  {
+    name: "Test multidimensional array type",
+    code:
+      `
+          class MultidimensionalArray
+          { 
+            public int[][] arr;
+          }
+          `,
+    expect:
+      [
+        {
+          name: "MultidimensionalArray",
+          attributes: [
+            {
+              name: "arr",
+              value: "",
+              type: "int[][]",
+              modifiers: [],
+              line: 4
+            }
+          ],
+          methods: [],
+          interface: false,
+          extends: "",
+          implements: [],
+          modifiers: [],
+          generics: [],
+          constructors: [],
+          line: 2,
+          filePath: ""
+        }
+      ]
   }
+
 ];
 
 tests.forEach(t => test(t.name, () => {
@@ -593,8 +630,8 @@ tests.forEach(t => test(t.name, () => {
   let tokens = [];
   let token = tokenizer.getNextToken();
   while (token !== null) {
-      tokens.push(token);
-      token = tokenizer.getNextToken();
+    tokens.push(token);
+    token = tokenizer.getNextToken();
   }
   let classes = LocateClasses(tokens);
   expect(classes).toStrictEqual(t.expect)

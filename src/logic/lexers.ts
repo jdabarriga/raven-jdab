@@ -119,6 +119,7 @@ export class JavaTokenizer {
     private readMultiLineComment(): Token {
         let value = '';
         while (this.code[this.index] !== undefined) {
+            if (this.code[this.index] === "\n") this.line ++;
             const char = this.getNextChar();
             if (char === '*' && this.code[this.index] === '/') {
                 this.index++;
