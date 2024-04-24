@@ -700,6 +700,46 @@ let tests = [
           filePath: ""
         }
       ]
+  },
+
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  {
+    name: "Test interfaces",
+    code:
+      `
+          interface TestInterface
+          { 
+            public void MethodDefinition();
+          }
+          `,
+    expect:
+      [
+        {
+          name: "TestInterface",
+          attributes: [],
+          methods: [
+            {
+              name: "MethodDefinition",
+              parameters: [],
+              return: "void",
+              modifiers: [
+                "public"
+              ],
+              generics: [],
+              line: 4
+            }
+          ],
+          interface: true,
+          extends: "",
+          implements: [],
+          modifiers: [],
+          generics: [],
+          constructors: [],
+          line: 2,
+          filePath: ""
+        }
+      ]
   }
 
 ];

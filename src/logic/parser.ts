@@ -312,9 +312,13 @@ export function LocateMembers(tokens: Token[], className: string = "", isParamet
                 let parameterMembers = LocateMembers(valueTokens, "", true);
                 index += valueTokens.length + 2;
                 // Skip past any extra stuff like "throws"
-                while (index < tokens.length && tokens[index].value !== "{") index ++;
-                let content = GetTokensInScope(tokens, index);
-                index += content.length + 1;
+                while (index < tokens.length && (tokens[index].value !== "{" && tokens[index].value !== ";")) index ++;
+                if (tokens[index].value === "{") {
+                    let content = GetTokensInScope(tokens, index);
+                    index += content.length + 1;
+                } else {
+                    index ++;
+                }
                 if (!isConstructor) {
                     ret.methods.push({
                         modifiers: [...modifierTokens.map((t) => t.value)], 
