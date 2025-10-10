@@ -1,10 +1,15 @@
 import React, { useState, useRef } from 'react';
-import { RetrieveJavaClassModels } from '../logic/folderUtils';
+import { RetrieveJavaClassModels, RetrieveJavaClassModelsFromBrowser } from '../logic/folderUtils';
 import RavenLogo from '../assets/raven-logo.png';
 import { CloseableTab, SidebarTab } from '../components';
 import { Link } from 'react-router-dom';
 import { os, filesystem, events } from "@neutralinojs/lib";
 import './Welcome.css';
+
+// Check if Neutralino is available (desktop mode)
+const isNeutralinoAvailable = () => {
+  return typeof window !== 'undefined' && window.NL !== undefined;
+};
 
 // Set this to true to have "Open Project Directory" auto generate example classes instead of opening the file picker
 let developerMode = false;
@@ -13,9 +18,20 @@ let CurrentWatcherID = -1;
 
 const Home = () => {
   const [data, setData] = useState([]);
+  const fileInputRef = useRef(null);
 
   async function retrieveClassModel() {
     let classes = [];
+    
+    // Check if we're in web mode (no Neutralino)
+    if (!isNeutralinoAvailable()) {
+      // Trigger the hidden file input for browser-based file selection
+      if (fileInputRef.current) {
+        fileInputRef.current.click();
+      }
+      return;
+    }
+    
     if (developerMode) {
       classes =  [
         
@@ -87,17 +103,53 @@ const Home = () => {
     setData(classes);
   }
 
-  events.on('watchFile', async (evt) => {
-    if (!developerMode && CurrentWatcherID == evt.detail.id) {
-        let classes = await RetrieveJavaClassModels(evt.detail.dir);
+  // Handle file selection in web mode
+  async function handleFileSelection(event) {
+    const files = event.target.files;
+    if (files && files.length > 0) {
+      try {
+        const classes = await RetrieveJavaClassModelsFromBrowser(files);
         setData(classes);
+      } catch (error) {
+        console.error('Error parsing Java files:', error);
+        alert('Error parsing Java files. Please make sure you selected valid .java files.');
+      }
     }
-  });
+  }
 
   const focusRef = useRef();
 
+  // Only set up file watcher in desktop mode
+  React.useEffect(() => {
+    if (isNeutralinoAvailable()) {
+      const handleWatchFile = async (evt) => {
+        if (!developerMode && CurrentWatcherID == evt.detail.id) {
+            let classes = await RetrieveJavaClassModels(evt.detail.dir);
+            setData(classes);
+        }
+      };
+      
+      events.on('watchFile', handleWatchFile);
+      
+      return () => {
+        events.off('watchFile', handleWatchFile);
+      };
+    }
+  }, []);
+
   return (
       <div className="text-white mt-0 text-center home-container" /*makes text white , centers text, for open directory button*/>
+        {/* Hidden file input for web mode */}
+        <input
+          type="file"
+          ref={fileInputRef}
+          onChange={handleFileSelection}
+          webkitdirectory=""
+          directory=""
+          multiple
+          style={{ display: 'none' }}
+          accept=".java"
+        />
         <div className="bg-[#68666c] flex border-4 rounded-3xl"> {/* edits the white border outline of page */}
           <div className="w-2/8 p-2 bg-[black] rounded-3xl p-1 m-1.5 items-center justify-center"> {/* edits sidebar, p-width, m-gray outline width */}
             <div className='w-[17vw] justify-center items-center' /* this is the sidebar width */ > 

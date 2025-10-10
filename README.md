@@ -18,16 +18,24 @@ https://docs.google.com/document/d/1h76mi16s63c1m3UmgfV3Yrm5BpBVlHCr9RKwgpqXdDk/
 https://docs.google.com/presentation/d/1Ttnl4fL9R8wcbp_A9sYdgh50CFGYdZ-mCkBDW8GJPzY/edit?usp=sharing
 
 ## Getting Started Guide
-### Clone From GitHub:
 - If you haven't already, install Git here: https://git-scm.com/download/win
 - Open your terminal and use the `cd` command to navigate to the folder where you want the project to be stored
 - Run `git clone https://github.com/mddvisu/raven`. A prompt may open up asking you for your git credentials
 
 ### Run the application:
-- Install NodeJs here if you haven’t already: https://nodejs.org/en
+
+#### Desktop Mode (Full Features):
+- Install NodeJs here if you haven't already: https://nodejs.org/en
 - Open your terminal and use the `cd` command to navigate to the folder where you stored the project
 - Run `npm install` to install any required npm modules
 - Run `npm run build && neu run` to run the application
+
+#### Web Mode (Browser Deployment):
+Raven now supports both desktop and web deployments! When deployed to a web server (e.g., Netlify):
+- Click "Open Project Directory" to select Java files from your local machine
+- The browser will prompt you to select a folder containing `.java` files
+- All parsing happens client-side in your browser
+- **Note**: File watching and VS Code integration are only available in desktop mode
 
 ## Testing
 To run all tests, run `npm test` within the project directory
