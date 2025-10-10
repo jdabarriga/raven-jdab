@@ -12,12 +12,12 @@ import CategoryIcon from '@mui/icons-material/Category';
 // Gets the proper tailwind colors for a class
 export function getClassColor(abstract, interFace) {
   if (interFace) {
-    return "bg-gradient-to-b from-[#2e1503] to-[#4d4505]"; // Color for interface
+    return "bg-gradient-to-br from-yellow-500 to-yellow-700"; // Interface - yellow to darker yellow
   } else if (abstract) {
-    return "bg-gradient-to-b from-[#290316] to-[#630404]"; // Color for abstract 
+    return "bg-gradient-to-br from-red-500 to-orange-700"; // Abstract - red to darker orange
   }
   else {
-    return "bg-gradient-to-b from-[#0f052e] to-[#0c195e]";
+    return "bg-gradient-to-br from-blue-500 to-blue-800"; // Normal - blue to darker blue
   }
 }
 

@@ -51,24 +51,45 @@ export async function RetrieveJavaClassModels(projectDir: string): Promise<Class
  */
 export async function RetrieveJavaClassModelsFromBrowser(fileList: FileList): Promise<ClassModel[]> {
   let classes: ClassModel[] = [];
+  let errors: string[] = [];
   
   for (let i = 0; i < fileList.length; i++) {
     const file = fileList[i];
     if (!file.name.endsWith('.java')) continue;
     
-    const content = await file.text();
-    const tokenizer = new JavaTokenizer(content);
-    let tokens = [];
-    let token = tokenizer.getNextToken();
-    while (token !== null) {
-        tokens.push(token);
-        token = tokenizer.getNextToken();
+    try {
+      const content = await file.text();
+      
+      // Skip empty files
+      if (!content || content.trim().length === 0) {
+        console.warn(`Skipping empty file: ${file.name}`);
+        continue;
+      }
+      
+      const tokenizer = new JavaTokenizer(content);
+      let tokens = [];
+      let token = tokenizer.getNextToken();
+      while (token !== null) {
+          tokens.push(token);
+          token = tokenizer.getNextToken();
+      }
+      
+      let fileClasses = LocateClasses(tokens);
+      fileClasses.forEach(cl => {
+        cl.filePath = file.webkitRelativePath || file.name;
+      });
+      classes.push(...fileClasses);
+    } catch (error) {
+      console.error(`Error parsing file ${file.name}:`, error);
+      errors.push(`${file.name}: ${error.message}`);
+      // Continue processing other files instead of failing completely
     }
-    let fileClasses = LocateClasses(tokens);
-    fileClasses.forEach(cl => {
-      cl.filePath = file.webkitRelativePath || file.name;
-    });
-    classes.push(...fileClasses);
+  }
+  
+  if (errors.length > 0 && classes.length === 0) {
+    throw new Error(`Failed to parse any files:\n${errors.join('\n')}`);
+  } else if (errors.length > 0) {
+    console.warn(`Successfully parsed ${classes.length} classes, but encountered errors in ${errors.length} files:`, errors);
   }
   
   return classes;

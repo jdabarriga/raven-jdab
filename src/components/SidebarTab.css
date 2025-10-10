@@ -1,23 +1,47 @@
 .sidebar-tab {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    padding: 8px;
+    border: 1px solid var(--border-primary);
+    border-radius: 16px;
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    background-color: var(--bg-secondary);
 }
 
+/* Custom scrollbar styling - matches ReactFlow style */
+.sidebar-tab::-webkit-scrollbar {
+    width: 8px;
+}
+
+.sidebar-tab::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.sidebar-tab::-webkit-scrollbar-thumb {
+    background: #555;
+    border-radius: 4px;
+}
+
+.sidebar-tab::-webkit-scrollbar-thumb:hover {
+    background: #777;
+}
 
 .title {
-    font-size: 1.1em;
-    margin-bottom: 15px;
+    font-size: 1em;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--text-primary);
 }
 
 .title-red {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    margin-bottom: 15px;
+    padding: 8px;
+    border: 1px solid var(--border-primary);
+    border-radius: 12px;
+    margin-bottom: 8px;
     color: white;
-    background-color: red;
-    font-size: 1.1em;
+    background-color: #ef4444;
+    font-size: 1em;
+    font-weight: 600;
 }
 
 ul {

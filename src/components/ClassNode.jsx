@@ -43,7 +43,7 @@ const ClassNode = memo(({ data, isConnectable }) => {
       <Handle
         type="target"
         position={Position.Top}
-        style={{ background: '#1600dd;' }}
+        style={{ background: '#1600dd' }}
         isConnectable={isConnectable}
       />
       <div className="flex flex-col flex-grow p-1 relative justify-center">
@@ -53,7 +53,7 @@ const ClassNode = memo(({ data, isConnectable }) => {
             {getClassAccess(GetModelAccess(data.classData))}&nbsp;
             {limitString(data.classData.name, 20)}
           </button>
-          <div className="bg-gray-900 rounded-xl ml-2 p-3 flex-grow flex items-center justify-center">
+          <div className="bg-gray-900 rounded-xl ml-2 w-16 h-10 flex items-center justify-center">
             {getClassIcon(data.classData.interface, GetModelAbstract(data.classData))}
           </div>
         </div>

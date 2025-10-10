@@ -233,7 +233,31 @@ export function LocateMembers(tokens: Token[], className: string = "", isParamet
 
         if (tokens[index].value === "@") {
             index = SkipAnnotation(tokens, index);
-        } else if (tokens[index].type !== "COMMENT") {
+        }
+        // Skip nested classes - if we encounter a class definition inside a class, skip it entirely
+        else if (index < tokens.length && IsClassKeyword(tokens[index])) {
+            // Skip the class keyword and name
+            index += 2;
+            // Skip generics if present
+            if (index < tokens.length && tokens[index].value === "<") {
+                let genericTokens = GetTokensInScope(tokens, index);
+                index += genericTokens.length + 2;
+            }
+            // Skip extends/implements
+            while (index < tokens.length && (tokens[index].value === "extends" || tokens[index].value === "implements" || tokens[index].value === ",")) {
+                index++;
+                if (index < tokens.length && tokens[index].value === "<") {
+                    let genericTokens = GetTokensInScope(tokens, index);
+                    index += genericTokens.length + 2;
+                }
+            }
+            // Skip the entire class body
+            if (index < tokens.length && tokens[index].value === "{") {
+                let classBody = GetTokensInScope(tokens, index);
+                index += classBody.length + 2;
+            }
+        }
+        else if (tokens[index].type !== "COMMENT") {
             let line = tokens[index].line;
             while (index < tokens.length && IsMemberModifier(tokens[index])) {
                 modifierTokens.push(tokens[index]);
@@ -290,6 +314,10 @@ export function LocateMembers(tokens: Token[], className: string = "", isParamet
             if (index < tokens.length) {
                 nameToken = tokens[index];
                 index ++;
+            } else {
+                // Skip this member if we can't find a name token
+                index++;
+                continue;
             }
             // Equal sign here means that this is a defined attribute
             if (index < tokens.length && tokens[index].value === "=") {
@@ -307,23 +335,23 @@ export function LocateMembers(tokens: Token[], className: string = "", isParamet
                 }
             }
             // Opening parinthese here means that this is a method definition
-            else if (index < tokens.length && tokens[index].value === "(") {
+            else if (index < tokens.length && tokens[index] && tokens[index].value === "(") {
                 valueTokens = GetTokensInScope(tokens, index);
                 let parameterMembers = LocateMembers(valueTokens, "", true);
                 index += valueTokens.length + 2;
                 // Skip past any extra stuff like "throws"
-                while (index < tokens.length && (tokens[index].value !== "{" && tokens[index].value !== ";")) index ++;
-                if (tokens[index].value === "{") {
+                while (index < tokens.length && tokens[index] && (tokens[index].value !== "{" && tokens[index].value !== ";")) index ++;
+                if (index < tokens.length && tokens[index] && tokens[index].value === "{") {
                     let content = GetTokensInScope(tokens, index);
                     index += content.length + 1;
-                } else {
+                } else if (index < tokens.length) {
                     index ++;
                 }
                 if (!isConstructor) {
                     ret.methods.push({
                         modifiers: [...modifierTokens.map((t) => t.value)], 
                         return: typeTokens.map((t) => t.value).toString().replace(/,/g,""),
-                        name: nameToken.value, 
+                        name: nameToken?.value || "unknown",
                         parameters: [...parameterMembers.attributes],
                         generics: [],
                         line: line
@@ -332,7 +360,7 @@ export function LocateMembers(tokens: Token[], className: string = "", isParamet
                     ret.constructors.push({
                         modifiers: [...modifierTokens.map((t) => t.value)], 
                         return: typeTokens.map((t) => t.value).toString().replace(/,/g,""), 
-                        name: nameToken.value, 
+                        name: nameToken?.value || "unknown", 
                         parameters: [...parameterMembers.attributes],
                         generics: [],
                         line: line
@@ -341,36 +369,42 @@ export function LocateMembers(tokens: Token[], className: string = "", isParamet
             }
             // Semicolon, comma, or closing parinthese here means that this is the end of a variable definition
             if ((isParameters && index >= tokens.length) || (index < tokens.length && (tokens[index].value === ";" || tokens[index].value === "," || tokens[index].value === ")"))) {
-                // Add a variable model to the return structure's attributes
-                ret.attributes.push({
-                    modifiers: [...modifierTokens.map((t) => t.value)], 
-                    type: typeTokens.map((t) => t.value).toString().replace(/,/g,""), 
-                    name: nameToken.value, 
-                    value: valueTokens.map((t) => t.value).toString().replace(/,/g,""),
-                    line: line
-                });
+                // Add a variable model to the return structure's attributes (only if we have a valid name)
+                if (nameToken && nameToken.value) {
+                    ret.attributes.push({
+                        modifiers: [...modifierTokens.map((t) => t.value)], 
+                        type: typeTokens.map((t) => t.value).toString().replace(/,/g,""), 
+                        name: nameToken.value, 
+                        value: valueTokens.map((t) => t.value).toString().replace(/,/g,""),
+                        line: line
+                    });
+                }
                 
             } 
             // If there is a comma here, it means that the code is defining multiple attribues on one line
             while ((index < tokens.length && tokens[index].value === ",") && !isParameters) {
                 index ++;
-                nameToken.value = tokens[index].value;
-                index ++;
-                valueTokens = [];
-                if (index < tokens.length && tokens[index].value === "=") {
+                if (index < tokens.length && nameToken) {
+                    nameToken.value = tokens[index].value;
                     index ++;
-                    while (index < tokens.length && !(tokens[index].value === ";" || tokens[index].value === ",")) {
-                        valueTokens.push(tokens[index]);
+                    valueTokens = [];
+                    if (index < tokens.length && tokens[index].value === "=") {
                         index ++;
+                        while (index < tokens.length && !(tokens[index].value === ";" || tokens[index].value === ",")) {
+                            valueTokens.push(tokens[index]);
+                            index ++;
+                        }
                     }
+                    ret.attributes.push({
+                        modifiers: [...modifierTokens.map((t) => t.value)], 
+                        type: typeTokens.map((t) => t.value).toString().replace(/,/g,""), 
+                        name: nameToken.value, 
+                        value: valueTokens.map((t) => t.value).toString().replace(/,/g,""),
+                        line: line
+                    });
+                } else {
+                    break;
                 }
-                ret.attributes.push({
-                    modifiers: [...modifierTokens.map((t) => t.value)], 
-                    type: typeTokens.map((t) => t.value).toString().replace(/,/g,""), 
-                    name: nameToken.value, 
-                    value: valueTokens.map((t) => t.value).toString().replace(/,/g,""),
-                    line: line
-                });
             }
             index ++;
         } else {

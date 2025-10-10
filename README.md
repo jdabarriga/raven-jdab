@@ -1,4 +1,4 @@
-# Raven
+# Raven (Dale's Version)
 ## BackEnd Team
 - Mattie Davis
 - Elmore Siahaan
@@ -27,7 +27,6 @@ https://docs.google.com/presentation/d/1Ttnl4fL9R8wcbp_A9sYdgh50CFGYdZ-mCkBDW8GJ
 #### Desktop Mode (Full Features):
 - Install NodeJs here if you haven't already: https://nodejs.org/en
 - Open your terminal and use the `cd` command to navigate to the folder where you stored the project
-- Run `npm install` to install any required npm modules
 - Run `npm run build && neu run` to run the application
 
 #### Web Mode (Browser Deployment):
@@ -36,6 +35,61 @@ Raven now supports both desktop and web deployments! When deployed to a web serv
 - The browser will prompt you to select a folder containing `.java` files
 - All parsing happens client-side in your browser
 - **Note**: File watching and VS Code integration are only available in desktop mode
+
+### ✨ Key Features:
+
+#### 🎨 **Modern UI & Theming**
+- **Three Beautiful Dark Themes**: Midnight Raven, Shadow Raven, and Obsidian Raven
+- **Compact, Rounded Design**: Modern interface with optimized spacing and rounded corners
+- **Color-Coded Class Types**: 
+  - Blue gradient for normal classes
+  - Red-to-orange gradient for abstract classes
+  - Yellow gradient for interfaces
+- **Theme Switcher**: Easy access palette icon in bottom-left corner
+
+#### 📱 **Advanced Tab Management**
+- **Multi-Tab Interface**: Open multiple class inspectors simultaneously
+- **Closeable Tabs**: Close individual tabs with X button
+- **Tab Highlighting**: Purple accent shows currently selected tab
+- **Keyboard Shortcuts**: 
+  - `Ctrl + Left Arrow`: Switch to previous tab
+  - `Ctrl + Right Arrow`: Switch to next tab
+- **Scrollable Tabs**: Seamlessly handle many open tabs
+
+#### 🎯 **Smart Sidebar Navigation**
+- **Click to Focus**: Click any class to center it in the graph view
+- **Ctrl + Press**: While a sidebar item is focused, press Ctrl to open it in a new inspector tab
+- **Visual Feedback**: White ring highlights focused sidebar items
+- **Compact Design**: Optimized spacing with hover effects and smooth transitions
+
+#### 🔍 **Interactive Class Visualization**
+- **Clickable Class Nodes**: Click any class in the graph to open detailed inspector
+- **Hover Effects**: Smooth animations and visual feedback
+- **Color-Coded Gradients**: Instantly identify class types by color
+- **Detailed Class Inspector**: View all attributes, methods, and relationships
+- **Direct Code Navigation**: Click attributes/methods to jump to code in VS Code
+
+#### 🚀 **Demo Mode & Empty States**
+- **Instant Demo**: Try the Vehicle Management System example with one click
+- **Beautiful Empty State**: Helpful crow-themed message when no classes are loaded
+- **Quick Start Guide**: Clear instructions to get started
+
+#### Try the Demo:
+Don't have Java files handy? Click the **"🚀 Try Demo"** button to see Raven in action!
+
+The demo showcases a complete Vehicle Management System with:
+- **Abstract Classes**: `Vehicle` base class with common properties
+- **Interfaces**: `Drivable` and `Maintainable` for different capabilities
+- **Inheritance Hierarchy**: 
+  - `Vehicle` → `Car` → `ElectricCar` (multi-level inheritance)
+  - `Vehicle` → `Motorcycle`
+  - `Vehicle` → `Truck`
+- **Multiple Interface Implementation**: Classes implementing both `Drivable` and `Maintainable`
+- **Access Modifiers**: public, private, protected members
+- **Static Members**: Class-level tracking (e.g., total vehicles count)
+- **Abstract Methods**: Requiring implementation in subclasses
+
+This demo displays all of Raven's visualization features including class relationships, inheritance arrows, and interface implementations.
 
 ## Testing
 To run all tests, run `npm test` within the project directory

@@ -1,14 +1,22 @@
-import { useState, useEffect, useRef, useImperativeHandle } from "react";
+import { useState, useEffect, useRef, useImperativeHandle, useCallback } from "react";
+import React from 'react';
 import { fitView } from 'reactflow';
 import { Tab } from '@mui/material';
-import { TabList, TabContext, TabPanel } from '@mui/lab';
+import { TabContext, TabPanel } from '@mui/lab';
 import CloseIcon from '@mui/icons-material/Close';
-import React, { useCallback } from 'react';
-import ClassNode from "./ClassNode";
+import BoltIcon from '@mui/icons-material/Bolt';
+import FlagIcon from '@mui/icons-material/Flag';
+import Tooltip from '@mui/material/Tooltip';
+import ClassIcon from '@mui/icons-material/Class';
+import CategoryIcon from '@mui/icons-material/Category';
+import AccountTreeIcon from '@mui/icons-material/AccountTree';
+import { Handle, Position } from 'reactflow';
 import 'reactflow/dist/style.css';
 import './ClassNode.css';
 import dagre from 'dagre';
 import ClassInspector from './ClassInspector';
+import ClassNode from './ClassNode';
+import ScrollableTabs from './ScrollableTabs';
 import ReactFlow, { Controls, useNodesState, useEdgesState, MarkerType, useReactFlow, Background, BackgroundVariant } from 'reactflow';
 import '../pages/Welcome.css';
 
@@ -22,6 +30,150 @@ const nodeTypes = {
 // Specifically for the auto layout feature
 const nodeWidth = 400;
 const nodeHeight = 800;
+
+// Demo Tab Content Component
+const DemoTabContent = React.forwardRef(({ demoData, createClassInspectorTab }, ref) => {
+    const [nodes, setNodes, onNodesChange] = useNodesState([]);
+    const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+    const [reactFlowInstance, setReactFlowInstance] = useState(null);
+    
+    // Expose focus method to parent
+    useImperativeHandle(ref, () => ({
+        focusOnNode(nodeId) {
+            if (reactFlowInstance && nodes[nodeId]) {
+                reactFlowInstance.fitView({
+                    nodes: [nodes[nodeId]],
+                    duration: 800
+                });
+            }
+        }
+    }));
+    
+    useEffect(() => {
+        if (demoData && demoData.length > 0) {
+            // Get edge color from CSS variable
+            const edgeColor = getComputedStyle(document.documentElement).getPropertyValue('--edge-color').trim() || '#FFFFFF';
+            
+            // Create onClick handler
+            const onClick = (event) => {
+                let classIndex = Number(event.target.value);
+                let classObject = demoData[classIndex];
+                if (classObject !== undefined && createClassInspectorTab) {
+                    createClassInspectorTab(classObject, true); // Keep demo tab selected
+                }
+            };
+            
+            // Create nodes from demo data
+            const demoNodes = demoData.map((cl, i) => ({
+                name: cl.name,
+                id: (i + 1).toString(),
+                type: 'classNode',
+                position: { x: i * 200, y: 0 },
+                data: {
+                    onClick: onClick,
+                    classData: cl,
+                    classIndex: i,
+                }
+            }));
+            
+            // Create edges
+            const demoEdges = [];
+            let edgeCounter = 0;
+            for (let i = 0; i < demoData.length; i++) {
+                for (let j = 0; j < demoData.length; j++) {
+                    if (demoData[j].name === demoData[i].extends) {
+                        demoEdges.push({
+                            type: 'step',
+                            source: (j + 1).toString(),
+                            target: (i + 1).toString(),
+                            id: `extends-${i}-${j}-${edgeCounter++}`,
+                            animated: true,
+                            markerStart: {
+                                type: MarkerType.Arrow,
+                                width: 20,
+                                height: 20,
+                                color: edgeColor,
+                            },
+                            style: { strokeWidth: 5, stroke: edgeColor },
+                        });
+                    }
+                    if (demoData[i].implements.includes(demoData[j].name)) {
+                        demoEdges.push({
+                            type: 'step',
+                            source: (j + 1).toString(),
+                            target: (i + 1).toString(),
+                            id: `implements-${i}-${j}-${edgeCounter++}`,
+                            animated: true,
+                            markerStart: {
+                                type: MarkerType.ArrowClosed,
+                                width: 20,
+                                height: 20,
+                                color: edgeColor,
+                            },
+                            style: { strokeWidth: 5, stroke: edgeColor },
+                        });
+                    }
+                }
+            }
+            
+            const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(demoNodes, demoEdges, 'TB');
+            setNodes(layoutedNodes);
+            setEdges(layoutedEdges);
+            
+            // Auto-fit view after layout
+            setTimeout(() => {
+                if (reactFlowInstance) {
+                    reactFlowInstance.fitView({ duration: 800 });
+                }
+            }, 100);
+        }
+    }, [demoData, reactFlowInstance]);
+    
+    const onLayout = useCallback(() => {
+        if (nodes.length > 0 && reactFlowInstance) {
+            reactFlowInstance.fitView({ duration: 800 });
+        }
+    }, [nodes, reactFlowInstance]);
+    
+    return (
+        <div className="w-[100%] h-[100%] rounded-2xl" id="demo-react-flow-container" style={{ backgroundColor: 'var(--bg-secondary)', color: 'var(--text-primary)' }}>
+            <ReactFlow
+                nodes={nodes}
+                edges={edges}
+                onNodesChange={onNodesChange}
+                onEdgesChange={onEdgesChange}
+                proOptions={{ hideAttribution: true }}
+                nodeTypes={nodeTypes}
+                onInit={setReactFlowInstance}
+                minZoom={0.1}
+            >
+                <Controls />
+            </ReactFlow>
+            
+            <div className="relative bottom-20">
+                <button 
+                    className="absolute right-10 px-4 py-2 rounded-lg font-semibold transition-all duration-200 shadow-lg"
+                    onClick={() => onLayout()}
+                    style={{ 
+                        background: 'linear-gradient(to right, var(--border-primary), var(--border-secondary))',
+                        color: 'var(--text-primary)',
+                        border: '2px solid var(--border-primary)'
+                    }}
+                    onMouseEnter={(e) => {
+                        e.target.style.background = 'linear-gradient(to right, var(--accent), var(--accent-hover))';
+                        e.target.style.color = 'white';
+                    }}
+                    onMouseLeave={(e) => {
+                        e.target.style.background = 'linear-gradient(to right, var(--border-primary), var(--border-secondary))';
+                        e.target.style.color = 'var(--text-primary)';
+                    }}
+                >
+                    LAYOUT
+                </button>
+            </div>
+        </div>
+    );
+});
 
 const dagreGraph = new dagre.graphlib.Graph();
 dagreGraph.setDefaultEdgeLabel(() => ({}));
@@ -55,7 +207,7 @@ const getLayoutedElements = (nodes, edges, direction = 'TB') => {
 };
 
 
-const ClosableTab = ({ classData, focusRef }) => {
+const CloseableTab = ({ classData, focusRef, onDemoTabRequest, onSidebarDataChange, onClassInspectorRequest }) => {
 
     const [nodes, setNodes, onNodesChange] = useNodesState([]);
     const [edges, setEdges, onEdgesChange] = useEdgesState([]);
@@ -64,6 +216,20 @@ const ClosableTab = ({ classData, focusRef }) => {
     const [tabs, setTabs] = useState([]);
     const [panels, setPanels] = useState([]);
     const [openTabsCount, setOpenTabsCount] = useState(1); // Initial count with main tab
+    const [demoData, setDemoData] = useState(null);
+    const [hasDemoTab, setHasDemoTab] = useState(false);
+    const demoFocusRef = useRef(null);
+    
+    // Update sidebar when tab changes
+    useEffect(() => {
+        if (onSidebarDataChange) {
+            if (selectedTab === 'demo' && demoData) {
+                onSidebarDataChange(demoData);
+            } else if (selectedTab === '1') {
+                onSidebarDataChange(classData);
+            }
+        }
+    }, [selectedTab, demoData, classData, onSidebarDataChange]);
 
     //fix focus
     const [reactFlowInstance, setReactFlowInstance] = useState(null);
@@ -74,13 +240,15 @@ const ClosableTab = ({ classData, focusRef }) => {
     });
 
     useImperativeHandle(focusRef, () => ({
-
         focusOnNode(nodeId) {
-            if (reactFlowInstance) {
+            // Check which tab is active and focus accordingly
+            if (selectedTab === 'demo' && demoFocusRef.current) {
+                demoFocusRef.current.focusOnNode(nodeId);
+            } else if (reactFlowInstance && nodes[nodeId]) {
                 reactFlowInstance.fitView({
                     nodes: [nodes[nodeId]],
                     duration: 800
-                  });
+                });
             }
         }
     }));
@@ -123,44 +291,97 @@ const ClosableTab = ({ classData, focusRef }) => {
         setSelectedTab(newValue);
     };
 
+    // Keyboard shortcuts for tab navigation (Ctrl+Left, Ctrl+Right)
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            // Ctrl+Left or Ctrl+Right
+            if (e.ctrlKey && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')) {
+                e.preventDefault();
+                
+                // Get all tab values in order
+                const allTabs = ['1']; // Main tab
+                if (hasDemoTab) allTabs.push('demo');
+                tabs.forEach(tab => allTabs.push(tab.value));
+                
+                const currentIndex = allTabs.indexOf(selectedTab);
+                
+                if (e.key === 'ArrowLeft') {
+                    // Ctrl+Left - go to previous tab
+                    const prevIndex = currentIndex > 0 ? currentIndex - 1 : allTabs.length - 1;
+                    setSelectedTab(allTabs[prevIndex]);
+                } else if (e.key === 'ArrowRight') {
+                    // Ctrl+Right - go to next tab
+                    const nextIndex = currentIndex < allTabs.length - 1 ? currentIndex + 1 : 0;
+                    setSelectedTab(allTabs[nextIndex]);
+                }
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [selectedTab, tabs, hasDemoTab]);
+
     // Handle closing a tab
     const handleClose = (value) => {
-        const tabArr = tabs.filter(t => t.value !== value);
-        setTabs(tabArr);
-        const panelArr = panels.filter(p => p.value !== value);
-        setPanels(panelArr);
-        setOpenTabsCount(openTabsCount - 1); // Decrement count
-        setSelectedTab('1');
+        // If closing demo tab, just hide it
+        if (value === 'demo') {
+            setHasDemoTab(false);
+            setSelectedTab('1');
+        } else {
+            // For class inspector tabs, remove them
+            const tabArr = tabs.filter(t => t.value !== value);
+            setTabs(tabArr);
+            const panelArr = panels.filter(p => p.value !== value);
+            setPanels(panelArr);
+            setOpenTabsCount(openTabsCount - 1);
+            setSelectedTab('1');
+        }
     }
 
-    // Creates a new class inspector tab
-    const createClassInspectorTab = useCallback((data) => {
-        const newTab = {
-            value: `${openTabsCount + 1}`, // Incrementing count when new tab is created
-            label: `${data.name}`
-        };
+    // Creates a new class inspector tab (MOVED BEFORE createOrOpenDemoTab)
+    const createClassInspectorTab = useCallback((data, keepCurrentTab = false) => {
+        setOpenTabsCount(prevCount => {
+            const newTabValue = `${prevCount + 1}`;
+            
+            const newTab = {
+                value: newTabValue,
+                label: `${data.name}`
+            };
 
-        const getBackgroundColor = () => {
-            if (data.interface) {
-                return 'bg-[#B03A2E]'; // Interface 
-            } else if (data.abstract) {
-                return 'bg-[#7D3C98]'; // Abstract
-            } else {
-                return 'bg-[#148F77]'; // Normal
+            setTabs(prevTabs => [...prevTabs, newTab]);
+            setPanels(prevPanels => [
+                ...prevPanels,
+                {
+                    value: newTabValue,
+                    child: () => <ClassInspector data={data} />
+                }
+            ]);
+            
+            // Only switch to the new tab if not keeping current tab
+            if (!keepCurrentTab) {
+                setSelectedTab(newTabValue);
             }
-        };
-
-        setTabs([...tabs, newTab]);
-        setPanels([
-            ...panels,
-            {
-                value: `${openTabsCount + 1}`,
-                child: () => <ClassInspector data={data} />
-            }
-        ]);
-        setOpenTabsCount(openTabsCount + 1); // Increment count
-        setSelectedTab(`${openTabsCount + 1}`); // Select the newly created tab
-    }, [panels, tabs]);
+            
+            return prevCount + 1;
+        });
+    }, []);
+    
+    // Create or switch to demo tab
+    const createOrOpenDemoTab = useCallback((demoClasses) => {
+        setDemoData(demoClasses);
+        setHasDemoTab(true);
+        setSelectedTab('demo');
+    }, []);
+    
+    // Register the callbacks with parent component
+    useEffect(() => {
+        if (onDemoTabRequest) {
+            onDemoTabRequest(() => createOrOpenDemoTab);
+        }
+        if (onClassInspectorRequest) {
+            onClassInspectorRequest(() => createClassInspectorTab);
+        }
+    }, [onDemoTabRequest, createOrOpenDemoTab, onClassInspectorRequest, createClassInspectorTab]);
 
 
     // Automatically select main tab if there's only one tab
@@ -178,6 +399,9 @@ const ClosableTab = ({ classData, focusRef }) => {
 
     // Create nodes and connections from the class data whenever it is changed
     useEffect(() => {
+        // Get edge color from CSS variable
+        const edgeColor = getComputedStyle(document.documentElement).getPropertyValue('--edge-color').trim() || '#FFFFFF';
+        
         const onClick = (event) => {
             let classIndex = Number(event.target.value);
             let classObject = classData[classIndex];
@@ -205,6 +429,7 @@ const ClosableTab = ({ classData, focusRef }) => {
             );
             setEdges((edg) => {
                 let retval = [];
+                let edgeCounter = 0;
                 for (let i = 0; i < classData.length; i++) {
                     for (let j = 0; j < classData.length; j++) {
                         if (classData[j].name === classData[i].extends) {
@@ -212,17 +437,17 @@ const ClosableTab = ({ classData, focusRef }) => {
                                 type: 'step',
                                 source: (j + 1).toString(),
                                 target: (i + 1).toString(),
-                                id: i.toString(),
+                                id: `extends-${i}-${j}-${edgeCounter++}`,
                                 animated: true,
                                 markerStart: {
                                     type: MarkerType.Arrow,
                                     width: 20,
                                     height: 20,
-                                    color: '#FFFFFF',
+                                    color: edgeColor,
                                 },
                                 style: {
                                     strokeWidth: 5,
-                                    stroke: '#FFFFFF',
+                                    stroke: edgeColor,
                                 },
                             };
                             retval.push(edge);
@@ -232,17 +457,17 @@ const ClosableTab = ({ classData, focusRef }) => {
                                 type: 'step',
                                 source: (j + 1).toString(),
                                 target: (i + 1).toString(),
-                                id: i.toString(),
+                                id: `implements-${i}-${j}-${edgeCounter++}`,
                                 animated: true,
                                 markerStart: {
                                     type: MarkerType.ArrowClosed,
                                     width: 20,
                                     height: 20,
-                                    color: '#FFFFFF',
+                                    color: edgeColor,
                                 },
                                 style: {
                                     strokeWidth: 5,
-                                    stroke: '#FFFFFF',
+                                    stroke: edgeColor,
                                 },
                             };
                             retval.push(edge);
@@ -264,20 +489,82 @@ const ClosableTab = ({ classData, focusRef }) => {
         <div className="flex flex-col flex-grow w-[100%] h-[100%]">
             <TabContext value={selectedTab}>
                 <div className="flex justify-start items-center">
-                    <TabList onChange={handleChange} aria-label="lab API tabs example" className="items-center flex rounded-lg bg-gray-800 color-white h-[50px] mt-3 mx-6  "> {/* this line will edit the single tab on top size */}
-                        <Tab label="Main Tab" value="1" className="flex text-center bg-black text-white rounded-l-lg mx-1" style={{ color: 'white' }} />
+                    <ScrollableTabs onChange={handleChange} aria-label="lab API tabs example" className="items-center flex rounded-lg h-[50px] mt-3 mx-6" style={{ backgroundColor: 'var(--bg-secondary)', color: 'var(--text-primary)' }}>
+                        <Tab 
+                            label="Main Tab" 
+                            value="1" 
+                            className="flex text-center rounded-l-lg mx-1" 
+                            style={{ 
+                                color: 'var(--text-primary)', 
+                                backgroundColor: selectedTab === '1' ? 'var(--accent)' : 'var(--border-primary)' 
+                            }} 
+                        />
+                        {hasDemoTab && (
+                            <Tab
+                                icon={<CloseIcon className="hover:bg-red-700 rounded-full" onClick={() => handleClose('demo')} />}
+                                iconPosition="end"
+                                className="mb-1 rounded-2xl"
+                                style={{ 
+                                    color: 'var(--text-primary)', 
+                                    backgroundColor: selectedTab === 'demo' ? 'var(--accent)' : 'var(--border-primary)' 
+                                }}
+                                label="🚀 Demo"
+                                value="demo"
+                            />
+                        )}
                         {tabs.map((tab) => (
                             <Tab
                                 icon={<CloseIcon className="hover:bg-red-700 rounded-full" onClick={() => handleClose(tab.value)} />}
                                 iconPosition="end"
-                                className="bg-white hover:bg-gray-900 mb-1 rounded-2xl"
-                                style={{ color: 'white' }}
+                                className="mb-1 rounded-2xl"
+                                style={{ 
+                                    color: 'var(--text-primary)', 
+                                    backgroundColor: selectedTab === tab.value ? 'var(--accent)' : 'var(--border-primary)' 
+                                }}
                                 key={tab.value} label={tab.label} value={tab.value} />
                         ))}
-                    </TabList>
+                    </ScrollableTabs>
                 </div>
                 <TabPanel value="1" sx={{ witdh: "100%", height: "100%" }} >
-                    <div className="w-[100%] h-[100%] bg-gray-800 text-white rounded-2xl" id="react-flow-graph-container"> {/* edit the graph (gray box with the icons) size */}
+                    <div className="w-[100%] h-[100%] rounded-2xl relative" id="react-flow-graph-container" style={{ backgroundColor: 'var(--bg-secondary)', color: 'var(--text-primary)' }}> {/* edit the graph (gray box with the icons) size */}
+                        {/* Empty state with crow quote */}
+                        {(!classData || classData.length === 0) && (
+                            <div 
+                                className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none"
+                                style={{ zIndex: 1000 }}
+                            >
+                                <div 
+                                    className="text-center p-8 rounded-2xl pointer-events-auto shadow-2xl" 
+                                    style={{ 
+                                        backgroundColor: 'var(--bg-primary)', 
+                                        border: '2px solid var(--border-primary)',
+                                        backdropFilter: 'blur(10px)'
+                                    }}
+                                >
+                                    <div className="mb-4 flex justify-center space-x-4">
+                                        <div className="w-16 h-16 rounded-full flex items-center justify-center bg-gradient-to-br from-blue-500 to-blue-800 shadow-lg">
+                                            <ClassIcon fontSize="large" style={{ color: 'white' }} />
+                                        </div>
+                                        <div className="w-16 h-16 rounded-full flex items-center justify-center bg-gradient-to-br from-red-500 to-orange-700 shadow-lg">
+                                            <CategoryIcon fontSize="large" style={{ color: 'white' }} />
+                                        </div>
+                                        <div className="w-16 h-16 rounded-full flex items-center justify-center bg-gradient-to-br from-yellow-500 to-yellow-700 shadow-lg">
+                                            <AccountTreeIcon fontSize="large" style={{ color: 'white' }} />
+                                        </div>
+                                    </div>
+                                    <h2 className="text-2xl font-bold mb-4" style={{ color: 'var(--text-primary)' }}>
+                                        🐦‍⬛ Raven's Nest is Empty
+                                    </h2>
+                                    <p className="text-lg mb-2" style={{ color: 'var(--text-secondary)' }}>
+                                        "A wise raven never codes alone - import your Java classes!"
+                                    </p>
+                                    <p className="text-sm italic" style={{ color: 'var(--text-secondary)' }}>
+                                        Click "Open Project" or "🚀 Try Demo" to start exploring your code structure
+                                    </p>
+                                </div>
+                            </div>
+                        )}
+                        
                         <ReactFlow
                             nodes={nodes}
                             edges={edges}
@@ -291,13 +578,36 @@ const ClosableTab = ({ classData, focusRef }) => {
                             <Controls />
                         </ReactFlow>
                         
-                        <div className="relative bottom-20 border-white">
-                            <button className="absolute right-10 border-white" onClick={() => onLayout('TB')}>LAYOUT</button>
+                        <div className="relative bottom-20">
+                            <button 
+                                className="absolute right-10 px-4 py-2 rounded-lg font-semibold transition-all duration-200 shadow-lg"
+                                onClick={() => onLayout('TB')}
+                                style={{ 
+                                    background: 'linear-gradient(to right, var(--border-primary), var(--border-secondary))',
+                                    color: 'var(--text-primary)',
+                                    border: '2px solid var(--border-primary)'
+                                }}
+                                onMouseEnter={(e) => {
+                                    e.target.style.background = 'linear-gradient(to right, var(--accent), var(--accent-hover))';
+                                    e.target.style.color = 'white';
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.target.style.background = 'linear-gradient(to right, var(--border-primary), var(--border-secondary))';
+                                    e.target.style.color = 'var(--text-primary)';
+                                }}
+                            >
+                                LAYOUT
+                            </button>
                         </div>
                     </div>
                 </TabPanel>
+                {hasDemoTab && (
+                    <TabPanel value="demo" sx={{ width: "100%", height: "100%" }}>
+                        <DemoTabContent ref={demoFocusRef} demoData={demoData} createClassInspectorTab={createClassInspectorTab} />
+                    </TabPanel>
+                )}
                 {panels.map((panel) => (
-                    <TabPanel key={panel.value} value={panel.value}>
+                    <TabPanel key={panel.value} value={panel.value} sx={{ width: "100%", height: "100%" }}>
                         {panel.child()}
                     </TabPanel>
                 ))}
@@ -306,4 +616,4 @@ const ClosableTab = ({ classData, focusRef }) => {
     );
 };
 
-export default ClosableTab;
+export default CloseableTab;
