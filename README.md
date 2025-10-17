@@ -1,4 +1,7 @@
 # Raven (Dale's Version)
+
+**Version 2.1.0** - Code Editor Integration Update
+
 ## BackEnd Team
 - Mattie Davis
 - Elmore Siahaan
@@ -68,6 +71,19 @@ Raven now supports both desktop and web deployments! When deployed to a web serv
 - **Color-Coded Gradients**: Instantly identify class types by color
 - **Detailed Class Inspector**: View all attributes, methods, and relationships
 - **Direct Code Navigation**: Click attributes/methods to jump to code in VS Code
+
+#### 💻 **Integrated Code Editor (NEW in v2.1.0)**
+- **Monaco Editor Integration**: VS Code's powerful editor built right into Raven
+- **"Jump to Code" Feature**: Click any method, attribute, or constructor to view its source code
+- **Smart Line Navigation**: Automatically jumps to and highlights the exact line of code
+- **Syntax Highlighting**: Full Java syntax highlighting with Monaco
+- **Theme Synchronization**: Editor theme automatically matches your selected Raven theme
+- **Single Tab Instance**: One dedicated "Code Editor" tab that updates with each selection
+- **Works in Web Mode**: File storage system enables code viewing even in browser deployment
+- **Desktop & Web Support**: 
+  - Desktop: Reads files directly from filesystem
+  - Web: Uses in-memory storage from uploaded files
+- **Read-Only View**: Safe code browsing without accidental modifications
 
 #### 🚀 **Demo Mode & Empty States**
 - **Instant Demo**: Try the Vehicle Management System example with one click

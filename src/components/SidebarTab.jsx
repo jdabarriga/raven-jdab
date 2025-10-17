@@ -45,7 +45,7 @@ const SidebarTab = ({ sidetabs, handleFocusClass, createClassInspectorTab }) => 
                             {sidetabs.map((classData, index) => (
                                 <button 
                                     key={index} 
-                                    className={`block w-full text-white font-medium py-2 px-3 rounded-xl cursor-pointer text-center whitespace-nowrap overflow-hidden text-ellipsis transition-all duration-200 hover:scale-105 hover:shadow-lg ${getClassColor(GetModelAbstract(classData), classData.interface)} ${focusedIndex === index ? 'ring-2 ring-white' : ''}`}
+                                    className={`block w-full text-white font-bold py-2 px-3 rounded-xl cursor-pointer text-center whitespace-nowrap overflow-hidden text-ellipsis transition-all duration-200 hover:scale-105 hover:shadow-lg ${getClassColor(GetModelAbstract(classData), classData.interface)} ${focusedIndex === index ? 'ring-2 ring-white' : ''}`}
                                     onClick={() => {
                                         handleFocusClass.current.focusOnNode(index);
                                         setFocusedIndex(index);

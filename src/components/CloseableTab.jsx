@@ -17,6 +17,7 @@ import dagre from 'dagre';
 import ClassInspector from './ClassInspector';
 import ClassNode from './ClassNode';
 import ScrollableTabs from './ScrollableTabs';
+import CodeEditorTab from './CodeEditorTab';
 import ReactFlow, { Controls, useNodesState, useEdgesState, MarkerType, useReactFlow, Background, BackgroundVariant } from 'reactflow';
 import '../pages/Welcome.css';
 
@@ -215,9 +216,11 @@ const CloseableTab = ({ classData, focusRef, onDemoTabRequest, onSidebarDataChan
     const [selectedTab, setSelectedTab] = useState('1');
     const [tabs, setTabs] = useState([]);
     const [panels, setPanels] = useState([]);
-    const [openTabsCount, setOpenTabsCount] = useState(1); // Initial count with main tab
-    const [demoData, setDemoData] = useState(null);
+    const [openTabsCount, setOpenTabsCount] = useState(1); // Start at 1 since main tab is "1"
     const [hasDemoTab, setHasDemoTab] = useState(false);
+    const [demoData, setDemoData] = useState(null);
+    const [codeEditorData, setCodeEditorData] = useState(null);
+    const [hasCodeEditorTab, setHasCodeEditorTab] = useState(false);
     const demoFocusRef = useRef(null);
     
     // Update sidebar when tab changes
@@ -323,9 +326,13 @@ const CloseableTab = ({ classData, focusRef, onDemoTabRequest, onSidebarDataChan
 
     // Handle closing a tab
     const handleClose = (value) => {
-        // If closing demo tab, just hide it
         if (value === 'demo') {
             setHasDemoTab(false);
+            setSelectedTab('1');
+        } else if (value === 'code-editor') {
+            setHasCodeEditorTab(false);
+            setCodeEditorData(null);
+            setTabs(prevTabs => prevTabs.filter(t => t.value !== 'code-editor'));
             setSelectedTab('1');
         } else {
             // For class inspector tabs, remove them
@@ -338,33 +345,39 @@ const CloseableTab = ({ classData, focusRef, onDemoTabRequest, onSidebarDataChan
         }
     }
 
+    // Creates or updates the code editor tab
+    const createCodeEditorTab = useCallback((fileData) => {
+        setCodeEditorData(fileData);
+        
+        if (!hasCodeEditorTab) {
+            setTabs(prevTabs => {
+                // Check if code-editor tab already exists
+                const exists = prevTabs.some(tab => tab.value === 'code-editor');
+                if (exists) return prevTabs;
+                return [...prevTabs, { value: 'code-editor', label: 'Code Editor', closeable: true }];
+            });
+            setHasCodeEditorTab(true);
+        }
+        
+        // Switch to code editor tab
+        setSelectedTab('code-editor');
+    }, [hasCodeEditorTab]);
+
     // Creates a new class inspector tab (MOVED BEFORE createOrOpenDemoTab)
     const createClassInspectorTab = useCallback((data, keepCurrentTab = false) => {
         setOpenTabsCount(prevCount => {
             const newTabValue = `${prevCount + 1}`;
             
-            const newTab = {
-                value: newTabValue,
-                label: `${data.name}`
-            };
-
-            setTabs(prevTabs => [...prevTabs, newTab]);
-            setPanels(prevPanels => [
-                ...prevPanels,
-                {
-                    value: newTabValue,
-                    child: () => <ClassInspector data={data} />
-                }
-            ]);
+            setTabs(prevTabs => [...prevTabs, { value: newTabValue, label: data.name, closeable: true }]);
+            setPanels(prevPanels => [...prevPanels, { value: newTabValue, content: <ClassInspector data={data} createCodeEditorTab={createCodeEditorTab} /> }]);
             
-            // Only switch to the new tab if not keeping current tab
             if (!keepCurrentTab) {
                 setSelectedTab(newTabValue);
             }
             
             return prevCount + 1;
         });
-    }, []);
+    }, [createCodeEditorTab]);
     
     // Create or switch to demo tab
     const createOrOpenDemoTab = useCallback((demoClasses) => {
@@ -525,7 +538,7 @@ const CloseableTab = ({ classData, focusRef, onDemoTabRequest, onSidebarDataChan
                         ))}
                     </ScrollableTabs>
                 </div>
-                <TabPanel value="1" sx={{ witdh: "100%", height: "100%" }} >
+                <TabPanel value="1" sx={{ width: "100%", height: "100%", display: selectedTab === '1' ? 'block' : 'none' }} >
                     <div className="w-[100%] h-[100%] rounded-2xl relative" id="react-flow-graph-container" style={{ backgroundColor: 'var(--bg-secondary)', color: 'var(--text-primary)' }}> {/* edit the graph (gray box with the icons) size */}
                         {/* Empty state with crow quote */}
                         {(!classData || classData.length === 0) && (
@@ -552,13 +565,13 @@ const CloseableTab = ({ classData, focusRef, onDemoTabRequest, onSidebarDataChan
                                             <AccountTreeIcon fontSize="large" style={{ color: 'white' }} />
                                         </div>
                                     </div>
-                                    <h2 className="text-2xl font-bold mb-4" style={{ color: 'var(--text-primary)' }}>
-                                        🐦‍⬛ Raven's Nest is Empty
+                                    <h2 className="text-2xl font-bold mb-4 empty-state-title" style={{ color: 'var(--text-primary)', fontFamily: "'Orbitron', sans-serif" }}>
+                                         Raven's Nest is Empty
                                     </h2>
-                                    <p className="text-lg mb-2" style={{ color: 'var(--text-secondary)' }}>
+                                    <p className="text-lg mb-2 empty-state-quote" style={{ color: 'var(--text-secondary)', fontFamily: "'Orbitron', sans-serif" }}>
                                         "A wise raven never codes alone - import your Java classes!"
                                     </p>
-                                    <p className="text-sm italic" style={{ color: 'var(--text-secondary)' }}>
+                                    <p className="text-sm italic empty-state-instruction" style={{ color: 'var(--text-secondary)', fontFamily: "'Orbitron', sans-serif" }}>
                                         Click "Open Project" or "🚀 Try Demo" to start exploring your code structure
                                     </p>
                                 </div>
@@ -602,13 +615,18 @@ const CloseableTab = ({ classData, focusRef, onDemoTabRequest, onSidebarDataChan
                     </div>
                 </TabPanel>
                 {hasDemoTab && (
-                    <TabPanel value="demo" sx={{ width: "100%", height: "100%" }}>
+                    <TabPanel value="demo" sx={{ width: "100%", height: "100%", display: selectedTab === 'demo' ? 'block' : 'none' }}>
                         <DemoTabContent ref={demoFocusRef} demoData={demoData} createClassInspectorTab={createClassInspectorTab} />
                     </TabPanel>
                 )}
+                {hasCodeEditorTab && (
+                    <TabPanel value="code-editor" sx={{ width: "100%", height: "100%", display: selectedTab === 'code-editor' ? 'block' : 'none' }}>
+                        <CodeEditorTab fileData={codeEditorData} />
+                    </TabPanel>
+                )}
                 {panels.map((panel) => (
-                    <TabPanel key={panel.value} value={panel.value} sx={{ width: "100%", height: "100%" }}>
-                        {panel.child()}
+                    <TabPanel key={panel.value} value={panel.value} sx={{ width: "100%", height: "100%", padding: 0, display: selectedTab === panel.value ? 'block' : 'none' }}>
+                        {panel.content}
                     </TabPanel>
                 ))}
             </TabContext>

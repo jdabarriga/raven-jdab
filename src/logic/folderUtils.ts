@@ -3,6 +3,7 @@ import { LocateClasses } from './parser';
 import { JavaTokenizer } from './lexers';
 import { FileModel } from '../structures/filesystemModels'
 import { ClassModel } from "../structures/classModels";
+import { fileStorage } from './fileStorage';
 
 /**
  * Checks if Neutralino APIs are available (desktop mode)
@@ -53,6 +54,9 @@ export async function RetrieveJavaClassModelsFromBrowser(fileList: FileList): Pr
   let classes: ClassModel[] = [];
   let errors: string[] = [];
   
+  // Clear previous files from storage
+  fileStorage.clear();
+  
   for (let i = 0; i < fileList.length; i++) {
     const file = fileList[i];
     if (!file.name.endsWith('.java')) continue;
@@ -66,6 +70,11 @@ export async function RetrieveJavaClassModelsFromBrowser(fileList: FileList): Pr
         continue;
       }
       
+      // Store the file content for later access by Code Editor
+      const filePath = file.webkitRelativePath || file.name;
+      fileStorage.storeFile(filePath, content);
+      console.log(`Stored file: ${filePath}`);
+      
       const tokenizer = new JavaTokenizer(content);
       let tokens = [];
       let token = tokenizer.getNextToken();
@@ -76,7 +85,7 @@ export async function RetrieveJavaClassModelsFromBrowser(fileList: FileList): Pr
       
       let fileClasses = LocateClasses(tokens);
       fileClasses.forEach(cl => {
-        cl.filePath = file.webkitRelativePath || file.name;
+        cl.filePath = filePath;
       });
       classes.push(...fileClasses);
     } catch (error) {
@@ -91,6 +100,8 @@ export async function RetrieveJavaClassModelsFromBrowser(fileList: FileList): Pr
   } else if (errors.length > 0) {
     console.warn(`Successfully parsed ${classes.length} classes, but encountered errors in ${errors.length} files:`, errors);
   }
+  
+  console.log(`Total files stored: ${fileStorage.getAllPaths().length}`);
   
   return classes;
 }

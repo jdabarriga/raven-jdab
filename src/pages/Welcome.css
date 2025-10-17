@@ -5,7 +5,18 @@
   justify-content: center;
   min-height: 100vh;
   min-width: 100vw;
-  background: linear-gradient(to top, #292929, #000000); /* Dark Gray to Black */
+  background: var(--bg-primary);
+  position: relative;
+  overflow: hidden;
+}
+
+.welcome-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  max-width: 1400px;
+  padding: 2rem;
 }
 
 .home-container{
@@ -17,70 +28,111 @@
   background: linear-gradient(to top, #292929, #000000); /* Dark Gray to Black */
 }
 
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+
 body {
-  margin: 0; /* Reset default body margin */
-  font-family: Arial, Helvetica, sans-serif; /* Default font family */
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.welcome-header {
+  text-align: left;
+  position: relative;
+  z-index: 2;
 }
 
 .welcome-title {
-  font-size: 7vw;
-  font-weight: bold;
-  text-decoration: underline;
-  color: #FFFFFF;
-  text-shadow: 
-    -3px -3px 0 #000,  
-     3px -3px 0 #000,
-    -3px 3px 0 #000,  
-     3px 3px 0 #000,
-    -4px 0 0 #000,
-     4px 0 0 #000,
-     0 -4px 0 #000,
-     0 4px 0 #000; /* Broader outlining effect */
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 900;
+  letter-spacing: 0.3rem;
+  line-height: 0.9;
+  color: var(--text-primary);
+  margin: 0;
+  position: relative;
+  background: linear-gradient(
+    135deg,
+    var(--text-primary) 0%,
+    var(--text-primary) 40%,
+    rgba(255, 255, 255, 0.9) 50%,
+    var(--text-primary) 60%,
+    var(--text-primary) 100%
+  );
+  background-size: 200% 200%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 3s ease-in-out infinite;
 }
 
+.welcome-title-top {
+  font-size: clamp(2rem, 6vw, 5rem);
+  display: block;
+  text-decoration: none;
+  margin-bottom: -0.5rem;
+}
 
+.welcome-title-raven {
+  font-size: clamp(3.5rem, 10vw, 8rem);
+  display: block;
+  text-decoration: underline;
+  text-decoration-thickness: 5px;
+  text-underline-offset: 0.5rem;
+  margin-top: 0;
+}
 
 .welcome-subtitle {
-  margin-top: 0.5rem;
-  font-size: 4vw; /* Responsive font size */
-  font-weight: bold;
-  text-decoration: underline;
-  color: #ffffff;
-}
-
-.welcome-description {
-  margin-top: 1rem;
-  font-size: 2vw; /* Responsive font size */
-  color: #a3a3a3;
+  margin-top: 2rem;
+  font-size: clamp(0.9rem, 1.5vw, 1.2rem);
+  color: var(--text-secondary);
+  letter-spacing: 0.1rem;
 }
 
 .welcome-button {
-  margin-top: 2rem;
-  font-size: 2vw; /* text size of the press start button */
-  padding: 1.5vw 3vw; /* padding between the border and text in the press start button */
-  background: linear-gradient(to top, #292929, #000000);
-  border: 0.4vw solid #170c31; /* purple border around the press start button */
-  border-radius: 10vw; /* Responsive border radius */
-  outline: none;
+  margin-top: 3rem;
+  font-size: clamp(1rem, 2vw, 1.5rem);
+  font-weight: 600;
+  padding: 1rem 3rem;
+  background: transparent;
+  border: 3px solid var(--accent);
+  border-radius: 8px;
+  color: var(--accent);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  letter-spacing: 0.2rem;
+  text-transform: uppercase;
 }
 
 .welcome-button:hover {
-  background-color: #0c0a0a;
+  background: var(--accent);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
 }
 
 .welcome-link {
   text-decoration: none;
-  color: #ffffff;
+}
+
+.welcome-logo-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 300px;
+}
+
+.welcome-logo-circle {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .welcome-logo {
-  width: 60%; /* Responsive width */
-  max-width: 300px; 
-  margin-top: 3vw; /* Responsive margin */
-  margin-bottom: 3vw; /* Added margin for centering */ 
-  margin-left: 5vw;
-  margin-right: 2vw;
-  animation: hover 2s ease-in-out infinite;
+  width: clamp(400px, 50vw, 700px);
+  height: auto;
+  object-fit: contain;
+  animation: float 3s ease-in-out infinite;
 }
 
 .raven-logo {
@@ -109,9 +161,41 @@ body {
     transform: translateY(0) rotate(0deg);
   }
   50% {
-    transform: translateY(-1vw) rotate(5deg); /* Responsive translateY */
+    transform: translateY(-1vw) rotate(5deg);
   }
   100% {
     transform: translateY(0) rotate(0deg);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-10px) scale(1.02);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0%;
+    filter: hue-rotate(0deg);
+  }
+  25% {
+    background-position: 0% 100%;
+    filter: hue-rotate(90deg);
+  }
+  50% {
+    background-position: -100% 50%;
+    filter: hue-rotate(180deg);
+  }
+  75% {
+    background-position: 50% -100%;
+    filter: hue-rotate(270deg);
+  }
+  100% {
+    background-position: 200% 0%;
+    filter: hue-rotate(360deg);
   }
 }

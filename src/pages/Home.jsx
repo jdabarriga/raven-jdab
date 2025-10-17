@@ -8,6 +8,7 @@ import { CloseableTab, SidebarTab } from '../components';
 import ThemeSwitcher from '../components/ThemeSwitcher';
 import { Link } from 'react-router-dom';
 import { os, filesystem, events } from "@neutralinojs/lib";
+import { fileStorage } from '../logic/fileStorage';
 import './Welcome.css';
 
 // Check if Neutralino is available (desktop mode)
@@ -137,7 +138,14 @@ const Home = () => {
       const demoFiles = await getDemoFiles();
       let classes = [];
       
+      // Clear previous files and store demo files
+      fileStorage.clear();
+      
       for (const file of demoFiles) {
+        // Store the demo file content for Code Editor
+        fileStorage.storeFile(file.path, file.content);
+        console.log(`Stored demo file: ${file.path}`);
+        
         const tokenizer = new JavaTokenizer(file.content);
         let tokens = [];
         let token = tokenizer.getNextToken();
@@ -151,6 +159,8 @@ const Home = () => {
         });
         classes.push(...fileClasses);
       }
+      
+      console.log(`Total demo files stored: ${fileStorage.getAllPaths().length}`);
       
       // Call the callback to create/open demo tab
       if (demoTabCallback) {
@@ -219,7 +229,7 @@ const Home = () => {
                     e.target.style.color = 'var(--text-primary)';
                   }}
                 >
-                  Open Project
+                  Upload Project
                 </button>
               </div>
               <button 
