@@ -1,7 +1,6 @@
 # Raven (Dale's Version)
 
 [![Run Tests](https://github.com/jdabarriga/raven-jdab/actions/workflows/test.yml/badge.svg)](https://github.com/jdabarriga/raven-jdab/actions/workflows/test.yml)
-[![Deploy to Netlify](https://github.com/jdabarriga/raven-jdab/actions/workflows/deploy.yml/badge.svg)](https://github.com/jdabarriga/raven-jdab/actions/workflows/deploy.yml)
 
 **Version 2.1.0** - Code Editor Integration Update
 
