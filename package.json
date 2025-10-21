@@ -30,6 +30,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "test:coverage": "react-scripts test --coverage --watchAll=false",
+    "test:ci": "CI=true react-scripts test --coverage",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -52,6 +54,7 @@
   },
   "devDependencies": {
     "ajv": "^6.12.6",
-    "java-parser": "^2.2.0"
+    "java-parser": "^2.2.0",
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11"
   }
 }

@@ -73,7 +73,6 @@ export async function RetrieveJavaClassModelsFromBrowser(fileList: FileList): Pr
       // Store the file content for later access by Code Editor
       const filePath = file.webkitRelativePath || file.name;
       fileStorage.storeFile(filePath, content);
-      console.log(`Stored file: ${filePath}`);
       
       const tokenizer = new JavaTokenizer(content);
       let tokens = [];
@@ -100,8 +99,6 @@ export async function RetrieveJavaClassModelsFromBrowser(fileList: FileList): Pr
   } else if (errors.length > 0) {
     console.warn(`Successfully parsed ${classes.length} classes, but encountered errors in ${errors.length} files:`, errors);
   }
-  
-  console.log(`Total files stored: ${fileStorage.getAllPaths().length}`);
   
   return classes;
 }

@@ -1,5 +1,8 @@
 # Raven (Dale's Version)
 
+[![Run Tests](https://github.com/jdabarriga/raven-jdab/actions/workflows/test.yml/badge.svg)](https://github.com/jdabarriga/raven-jdab/actions/workflows/test.yml)
+[![Deploy to Netlify](https://github.com/jdabarriga/raven-jdab/actions/workflows/deploy.yml/badge.svg)](https://github.com/jdabarriga/raven-jdab/actions/workflows/deploy.yml)
+
 **Version 2.1.0** - Code Editor Integration Update
 
 ## BackEnd Team
@@ -108,6 +111,31 @@ The demo showcases a complete Vehicle Management System with:
 This demo displays all of Raven's visualization features including class relationships, inheritance arrows, and interface implementations.
 
 ## Testing
-To run all tests, run `npm test` within the project directory
 
-All test files are located in `raven/src/tests/`
+### Running Tests Locally
+```bash
+# Run tests in watch mode
+npm test
+
+# Run tests with coverage report
+npm run test:coverage
+
+# Run tests in CI mode (single run)
+npm run test:ci
+```
+
+### Continuous Integration
+Tests automatically run on every push and pull request via GitHub Actions:
+- ✅ Runs on Node.js 18.x and 20.x
+- ✅ Generates coverage reports
+- ✅ Uploads test artifacts
+- ✅ Integrates with Codecov (optional)
+
+### Test Coverage
+All test files are located in `src/tests/`:
+- **Component Tests**: ThemeSwitcher, SidebarTab, CodeViewer, ScrollableTabs
+- **Page Tests**: Welcome, Home
+- **Integration Tests**: Full user flow testing
+- **Utility Tests**: FolderUtils, Lexers, Parser
+
+**Coverage Goals**: 50% minimum for branches, functions, lines, and statements

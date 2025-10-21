@@ -46,7 +46,6 @@ const ClassInspector = ({ data, createCodeEditorTab }) => {
   const openCodeViewer = async (filePath, lineNumber) => {
     const fileName = filePath.split(/[\\/]/).pop();
     
-    console.log('Opening file:', filePath, 'at line:', lineNumber);
     
     try {
       let content;
@@ -54,11 +53,9 @@ const ClassInspector = ({ data, createCodeEditorTab }) => {
       // Check if we're in Neutralino (desktop mode)
       if (window.NL) {
         // Use Neutralino's filesystem API
-        console.log('Reading file with Neutralino API:', filePath);
         content = await filesystem.readFile(filePath);
       } else {
         // Web mode - retrieve from file storage
-        console.log('Reading file from storage:', filePath);
         content = fileStorage.getFile(filePath);
         
         if (!content) {
@@ -67,7 +64,6 @@ const ClassInspector = ({ data, createCodeEditorTab }) => {
           const matchingPath = allPaths.find(p => p.endsWith(fileName));
           
           if (matchingPath) {
-            console.log('Found file by name:', matchingPath);
             content = fileStorage.getFile(matchingPath);
           } else {
             throw new Error(`File not found in storage. Available files: ${allPaths.join(', ')}`);
@@ -75,7 +71,6 @@ const ClassInspector = ({ data, createCodeEditorTab }) => {
         }
       }
       
-      console.log('File content loaded, length:', content.length);
       
       // Create or update the code editor tab
       if (createCodeEditorTab) {
@@ -145,7 +140,7 @@ const ClassInspector = ({ data, createCodeEditorTab }) => {
               &nbsp;
               <div className="flex">
                 {data.implements.map((interfaceName, index) => (
-                  <span>
+                  <span key={index}>
                     {interfaceName}&nbsp;
                   </span>
                 ))}

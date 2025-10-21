@@ -26,6 +26,7 @@ const Home = () => {
   const [demoTabCallback, setDemoTabCallback] = useState(null);
   const [classInspectorCallback, setClassInspectorCallback] = useState(null);
   const [sidebarData, setSidebarData] = useState([]);
+  const [projectName, setProjectName] = useState('');
   const fileInputRef = useRef(null);
 
   async function retrieveClassModel() {
@@ -107,6 +108,10 @@ const Home = () => {
       if (CurrentWatcherID >= 0) await filesystem.removeWatcher(CurrentWatcherID);
       CurrentWatcherID = await filesystem.createWatcher(projectDir);
       classes = await RetrieveJavaClassModels(projectDir);
+      
+      // Extract project name from path
+      const folderName = projectDir.split(/[\\/]/).pop();
+      setProjectName(folderName);
     }
     setData(classes);
   }
@@ -116,12 +121,17 @@ const Home = () => {
     const files = event.target.files;
     if (files && files.length > 0) {
       try {
-        const javaFileCount = Array.from(files).filter(f => f.name.endsWith('.java')).length;
-        console.log(`Selected ${files.length} total files, ${javaFileCount} are .java files`);
         const classes = await RetrieveJavaClassModelsFromBrowser(files);
-        console.log('Successfully parsed', classes.length, 'classes');
         if (classes.length > 0) {
           setData(classes);
+          
+          // Extract project name from first file's path
+          if (files[0].webkitRelativePath) {
+            const folderName = files[0].webkitRelativePath.split('/')[0];
+            setProjectName(folderName);
+          } else {
+            setProjectName('Uploaded Project');
+          }
         } else {
           alert('No Java classes found in the selected files. Please make sure you selected a folder containing .java files.');
         }
@@ -144,7 +154,6 @@ const Home = () => {
       for (const file of demoFiles) {
         // Store the demo file content for Code Editor
         fileStorage.storeFile(file.path, file.content);
-        console.log(`Stored demo file: ${file.path}`);
         
         const tokenizer = new JavaTokenizer(file.content);
         let tokens = [];
@@ -159,8 +168,6 @@ const Home = () => {
         });
         classes.push(...fileClasses);
       }
-      
-      console.log(`Total demo files stored: ${fileStorage.getAllPaths().length}`);
       
       // Call the callback to create/open demo tab
       if (demoTabCallback) {
@@ -208,14 +215,16 @@ const Home = () => {
         <div className="w-2/8 p-2 rounded-3xl p-1 m-1.5 items-center justify-center" style={{ backgroundColor: 'var(--bg-primary)', border: '3px solid var(--border-secondary)' }}> {/* edits sidebar, p-width, m-gray outline width */}
           <div className='w-[17vw] justify-center items-center' /* this is the sidebar width */ > 
             <header className="flex flex-col mb-1 gap-2">{/* edits vertical spacing between open directory and class names */}
-              <div className="flex flex-row items-center">
-                <Link to="/" className="mr-3">
+              <div className="flex items-center">
+                <Link to="/">
                   <img src={RavenLogo} alt="Raven Logo" className="raven-logo" /> {/* can be edited in welcome.css file */}
                 </Link>
-                <button 
-                  className="directory-button flex items-center text-sm px-3 py-2 rounded-lg font-semibold transition-all duration-200 shadow-lg"
+                <div className="flex-1 flex justify-center">
+                  <button 
+                  className="directory-button flex items-center justify-center text-sm px-3 py-2 rounded-lg font-semibold transition-all duration-200 shadow-lg"
                   onClick={retrieveClassModel} 
                   style={{ 
+                    marginLeft: '-40px',
                     background: 'linear-gradient(to right, var(--border-primary), var(--border-secondary))',
                     color: 'var(--text-primary)',
                     border: '1px solid var(--border-primary)'
@@ -229,9 +238,20 @@ const Home = () => {
                     e.target.style.color = 'var(--text-primary)';
                   }}
                 >
-                  Upload Project
+                  {projectName ? 'Upload New' : 'Upload Project'}
                 </button>
+                </div>
               </div>
+              {projectName && (
+                <div className="text-center px-4 py-3 rounded-lg" style={{ 
+                  backgroundColor: 'var(--bg-secondary)',
+                  border: '2px solid var(--border-primary)'
+                }}>
+                  <span className="text-lg font-bold" style={{ color: 'var(--text-primary)', fontFamily: "'Orbitron', sans-serif" }}>
+                    {projectName} Loaded
+                  </span>
+                </div>
+              )}
               <button 
                 className="demo-button flex items-center justify-center text-sm px-3 py-2 rounded-lg font-semibold transition-all duration-200 shadow-lg"
                 onClick={loadDemoData}

@@ -118,7 +118,6 @@ const CodeEditorTab = ({ fileData }) => {
     // Jump to line after mount
     if (fileData?.lineNumber) {
       const lineNumber = parseInt(fileData.lineNumber);
-      console.log('Jumping to line:', lineNumber);
       
       // Use setTimeout to ensure editor is fully loaded
       setTimeout(() => {
